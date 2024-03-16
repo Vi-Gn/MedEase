@@ -1,0 +1,26 @@
+
+
+
+
+medicaments = [
+    {"label": "Paracetamol", "description": "Pain reliever and fever reducer", "quantity": 50, "price": 10.99},
+    {"label": "Ibuprofen", "description": "Nonsteroidal anti-inflammatory drug (NSAID)", "quantity": 30, "price": 8.50},
+    {"label": "Aspirin", "description": "Analgesic, antipyretic, and anti-inflammatory drug", "quantity": 40, "price": 7.25},
+    {"label": "Loratadine", "description": "Antihistamine used to treat allergies", "quantity": 25, "price": 12.75},
+    {"label": "Omeprazole", "description": "Proton-pump inhibitor used to reduce stomach acid", "quantity": 20, "price": 15.00},
+    {"label": "Simvastatin", "description": "Lipid-lowering medication", "quantity": 35, "price": 18.50},
+    {"label": "Metformin", "description": "Antidiabetic medication", "quantity": 30, "price": 9.99},
+    {"label": "Levothyroxine", "description": "Thyroid hormone replacement", "quantity": 15, "price": 10.25},
+    {"label": "Amoxicillin", "description": "Antibiotic used to treat bacterial infections", "quantity": 25, "price": 14.75},
+    {"label": "Atorvastatin", "description": "Lipid-lowering medication", "quantity": 20, "price": 17.99},
+    {"label": "Cetirizine", "description": "Antihistamine used to relieve allergy symptoms", "quantity": 30, "price": 11.50},
+    {"label": "Diazepam", "description": "Benzodiazepine medication used to treat anxiety, alcohol withdrawal, and seizures", "quantity": 15, "price": 20.25},
+    {"label": "Furosemide", "description": "Loop diuretic used to treat fluid retention (edema) and high blood pressure", "quantity": 25, "price": 16.75},
+    {"label": "Metoprolol", "description": "Beta blocker used to treat high blood pressure, chest pain (angina), and heart failure", "quantity": 20, "price": 14.99},
+    {"label": "Prednisone", "description": "Corticosteroid used to treat inflammation, severe allergies, arthritis, asthma, and skin conditions", "quantity": 35, "price": 22.50},
+    {"label": "Albuterol", "description": "Bronchodilator used to treat or prevent bronchospasm in people with reversible obstructive airway disease", "quantity": 40, "price": 13.25},
+    {"label": "Warfarin", "description": "Anticoagulant used to prevent blood clots from forming or growing larger in your blood and blood vessels", "quantity": 20, "price": 19.99},
+    {"label": "Acetaminophen", "description": "Pain reliever and fever reducer", "quantity": 45, "price": 9.50},
+    {"label": "Ciprofloxacin", "description": "Antibiotic used to treat a variety of bacterial infections", "quantity": 25, "price": 18.75},
+    {"label": "Losartan", "description": "Angiotensin II receptor blocker (ARB) used to treat high blood pressure and help protect the kidneys from damage due to diabetes", "quantity": 30, "price": 16.50}
+]
