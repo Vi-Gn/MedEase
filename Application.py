@@ -70,6 +70,7 @@ class Application(TTk):
       themeName = 'dark'
     else:
       themeName = 'light'
+    # Source : https://github.com/rdbende/Forest-ttk-theme
     filePath = TFileManager(f"ForestTheme\\forest-{themeName}.tcl")
     self.style.theme_use( f"forest-{themeName}")
 
