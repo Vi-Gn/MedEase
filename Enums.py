@@ -2,7 +2,7 @@ from enum import Enum
 
 
 
-class EThemeState(Enum):
+class ETHEMESTATE(Enum):
   DEFAULT = 0
   FORESTLIGHT = 1
   FORESTDARK = 2
@@ -17,12 +17,12 @@ class EThemeState(Enum):
   
   def next(self):
     index = self.value + 1
-    index %= len(EThemeState)
-    return EThemeState(index)
+    index %= len(ETHEMESTATE)
+    return ETHEMESTATE(index)
     
   def prev(self):
     index = self.value - 1
-    index %= len(EThemeState)
-    return EThemeState(index)
+    index %= len(ETHEMESTATE)
+    return ETHEMESTATE(index)
     
   

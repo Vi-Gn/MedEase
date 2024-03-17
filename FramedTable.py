@@ -27,6 +27,7 @@ from tkinter.ttk import Scrollbar as TScrollbar
 from typing import Literal
 
 
+from ConfigJSON import Config
 from FileManager import TFileManager
 from SubWindow import SubWindow
 from RDB import *
@@ -207,13 +208,15 @@ class FramedTable(TFrame):
         show: ["tree", "headings", "tree headings", ""]
         '''
     self.FileSortOrder: bool = True
+    
     if relpath == '-1':
       self.fileManager = TFileManager('databases')
       relpath = filedialog.askdirectory(initialdir=self.fileManager.GetAbsolutePath())
       if relpath == '':
         CLog.Info(f"Directory opened : {self.fileManager.GetAbsolutePath()} | Automatically | Didn't choose a valid directory")
         relpath = self.fileManager.GetFileName()
-      
+    else:
+      self.fileManager = TFileManager(relpath)
       
     self.fileManager.SetPathWorkdir(relpath)
       
@@ -260,7 +263,10 @@ class FramedTable(TFrame):
 
   def insertFiles(self, directory, baseName, sortMode:bool):
     '''sortMode: [True -> Sort ascending, False -> descending order]'''
+    relPath = os.path.relpath(directory)
     rootNode = self.table.insert("", "end", text=baseName, open=True)
+    Config.SetRelDirectoryConfig(relPath)
+    Config.SaveConfig()
     self.insertTree(rootNode, directory, sortMode)
 
   def insertTree(self, parent_node, directory, sortMode:bool):

@@ -19,6 +19,7 @@ from tkinter.ttk import Frame as TFrame
 from tkinter.ttk import Notebook as TNotebook
 
 from CLog import CLog
+from ConfigJSON import Config
 
 
 
@@ -35,7 +36,11 @@ class FrameTab(TFrame):
     self.__Grid(colIndex)
     self.openPaths: list[str] = []
     
-  
+  def destroy(self):
+    Config.SetOpenedPathsConfig(self.openPaths)
+    Config.SaveConfig()
+    super().destroy()
+
   def __del__(self):
     CLog.Info(f"FrameTab : has been destroyed from memory")
         

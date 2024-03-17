@@ -31,6 +31,7 @@ class MainFrame(TLabelFrame):
     self.pack(fill="both", padx=0, pady=0, expand=1)
     
   
-  def __del__(self):
+  def destroy(self):
     CLog.Info(f"MainFrame : has been destroyed from memory")
+    super().destroy()
         

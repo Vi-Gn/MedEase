@@ -1,6 +1,11 @@
 {
-    "themeName": "FORgESTDARK",
+    "themeName": "AZURELIGHT",
     "winSizeX": 1024,
     "winSizeY": 450,
-    "winState": "normal"
+    "winState": "NORMAL",
+    "openedPaths": [
+        "C:\\Users\\Sphiyo\\Desktop\\MedEase\\databases\\DemoData.db",
+        "C:\\Users\\Sphiyo\\Desktop\\MedEase\\databases\\StockNew.db"
+    ],
+    "relDirectory": "databases"
 }

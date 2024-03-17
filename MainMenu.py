@@ -16,11 +16,10 @@ limitations under the License.
 
 
 from CLog import CLog
-from Enums import EThemeState
+from Enums import ETHEMESTATE
 
 
 from tkinter import Menu as TMenu
-from FileManager import TFileManager
 
 
 # from Application import *
@@ -54,17 +53,17 @@ class MainMenu(TMenu):
     self.view_menu = TMenu(self, tearoff=0)
     self.view_menu.add_command(label="Toggle FullScreen", command= lambda : self.app.ToggleFullScreen())
     self.view_menu.add_separator()
-    self.view_menu.add_command(label="Default Theme", command= lambda : self.app.SetTheme(EThemeState.DEFAULT))
-    self.view_menu.add_command(label="Forest Light Theme", command= lambda :  self.app.SetTheme(EThemeState.FORESTLIGHT))
-    self.view_menu.add_command(label="Forest Dark Theme", command= lambda :  self.app.SetTheme(EThemeState.FORESTDARK))
-    self.view_menu.add_command(label="Azure Light Theme", command= lambda :  self.app.SetTheme(EThemeState.AZURELIGHT))
-    self.view_menu.add_command(label="Azure Dark Theme", command= lambda :  self.app.SetTheme(EThemeState.AZUREDARK))
-    self.view_menu.add_command(label="Alt Theme", command= lambda :  self.app.SetTheme(EThemeState.ALT))
-    self.view_menu.add_command(label="Clam Theme", command= lambda :  self.app.SetTheme(EThemeState.CLAM))
-    self.view_menu.add_command(label="Vista Theme", command= lambda :  self.app.SetTheme(EThemeState.VISTA))
-    self.view_menu.add_command(label="XP Native Theme", command= lambda :  self.app.SetTheme(EThemeState.XPNATIVE))
-    self.view_menu.add_command(label="Win Native Theme", command= lambda :  self.app.SetTheme(EThemeState.WINNATIVE))
-    self.view_menu.add_command(label="Classic Theme", command= lambda :  self.app.SetTheme(EThemeState.CLASSIC))
+    self.view_menu.add_command(label="Default Theme", command= lambda : self.app.SetTheme(ETHEMESTATE.DEFAULT))
+    self.view_menu.add_command(label="Forest Light Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.FORESTLIGHT))
+    self.view_menu.add_command(label="Forest Dark Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.FORESTDARK))
+    self.view_menu.add_command(label="Azure Light Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.AZURELIGHT))
+    self.view_menu.add_command(label="Azure Dark Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.AZUREDARK))
+    self.view_menu.add_command(label="Alt Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.ALT))
+    self.view_menu.add_command(label="Clam Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.CLAM))
+    self.view_menu.add_command(label="Vista Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.VISTA))
+    self.view_menu.add_command(label="XP Native Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.XPNATIVE))
+    self.view_menu.add_command(label="Win Native Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.WINNATIVE))
+    self.view_menu.add_command(label="Classic Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.CLASSIC))
     self.add_cascade(label="View", menu=self.view_menu)
 
     self.help_menu = TMenu(self, tearoff=0)
