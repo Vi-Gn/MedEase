@@ -97,6 +97,7 @@ class Application(TTk):
     self.style.tk.call("source", "Themes\\ForestTheme\\forest-dark.tcl")
     self.style.tk.call("source", "Themes\\ForestTheme\\forest-light.tcl")
     self.style.tk.call("source", "Themes/AzureTheme/azure.tcl")
+    self.style.tk.call("source", "Themes/SunValley/sv_ttk/sv.tcl")
     
   def SetTheme(self, eThemeState: ETHEMESTATE):
     """ themeName: [EThemeState.DEFAULT,  EThemeState.LIGHT,  EThemeState.DARK] """
@@ -121,6 +122,15 @@ class Application(TTk):
       case (ETHEMESTATE.AZUREDARK):
         # Source : https://github.com/rdbende/Azure-ttk-theme
         self.style.theme_use("azure-dark")
+      
+      
+      case (ETHEMESTATE.SUNVALLEYLIGHT):
+        # Source : https://github.com/rdbende/Azure-ttk-theme
+        self.style.theme_use("sun-valley-light")
+        
+      case (ETHEMESTATE.SUNVALLEYDARK):
+        # Source : https://github.com/rdbende/Azure-ttk-theme
+        self.style.theme_use("sun-valley-dark")
       
       case (ETHEMESTATE.ALT):
         self.style.theme_use( f"alt")

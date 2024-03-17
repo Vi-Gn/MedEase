@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 
+import os
 from tkinter.ttk import Frame as TFrame
 from tkinter.ttk import Notebook as TNotebook
 
@@ -37,7 +38,10 @@ class FrameTab(TFrame):
     self.openPaths: list[str] = []
     
   def destroy(self):
-    Config.SetOpenedPathsConfig(self.openPaths)
+    openRelPaths: list[str] = []
+    for openPath in self.openPaths:
+      openRelPaths.append(os.path.relpath(openPath))
+    Config.SetOpenedRefPathsConfig(openRelPaths)
     Config.SaveConfig()
     super().destroy()
 

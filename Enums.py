@@ -8,12 +8,14 @@ class ETHEMESTATE(Enum):
   FORESTDARK = 2
   AZURELIGHT = 3
   AZUREDARK = 4
-  ALT = 5
-  CLAM = 6
-  VISTA = 7
-  XPNATIVE = 8
-  WINNATIVE = 9
-  CLASSIC = 10
+  SUNVALLEYLIGHT = 5
+  SUNVALLEYDARK = 6
+  ALT = 7
+  CLAM = 8
+  VISTA = 9
+  XPNATIVE = 10
+  WINNATIVE = 11
+  CLASSIC = 12
   
   def next(self):
     index = self.value + 1

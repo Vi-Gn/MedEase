@@ -53,6 +53,8 @@ class MainMenu(TMenu):
     self.view_menu = TMenu(self, tearoff=0)
     self.view_menu.add_command(label="Toggle FullScreen", command= lambda : self.app.ToggleFullScreen())
     self.view_menu.add_separator()
+    self.view_menu.add_command(label="Sun Valley Light Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.SUNVALLEYLIGHT))
+    self.view_menu.add_command(label="Sun Valley Dark Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.SUNVALLEYDARK))
     self.view_menu.add_command(label="Default Theme", command= lambda : self.app.SetTheme(ETHEMESTATE.DEFAULT))
     self.view_menu.add_command(label="Forest Light Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.FORESTLIGHT))
     self.view_menu.add_command(label="Forest Dark Theme", command= lambda :  self.app.SetTheme(ETHEMESTATE.FORESTDARK))

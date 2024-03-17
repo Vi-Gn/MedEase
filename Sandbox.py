@@ -32,7 +32,7 @@ def main():
 
 
   # //todo this should be called after double clicking a db from file table
-  for path in Config.GetOpenedPathsConfig():
+  for path in Config.GetOpenedRelPathsConfig():
     relPath = os.path.relpath(path)
     fileName = os.path.basename(path)
     framedTableData = FramedTable(frameTab=Application.Get().frameTabData, tabname=fileName, FileOrData=False)

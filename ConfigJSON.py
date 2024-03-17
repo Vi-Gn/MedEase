@@ -21,7 +21,7 @@ class Config:
               'winSizeX': -1,
               'winSizeY': -1,
               'winState': EWINSTATE.NONE.name,
-              'openedPaths' : ['databases\\DemoData.db'],
+              'openedRelPaths' : ['databases\\DemoData.db'],
               'relDirectory' : 'databases'
   }
 
@@ -41,20 +41,20 @@ class Config:
     
   
   @staticmethod
-  def GetOpenedPathsConfig():
-    openedPaths: list[str] = Config.configDict['openedPaths']
-    if len(openedPaths):
+  def GetOpenedRelPathsConfig():
+    openedRelPaths: list[str] = Config.configDict['openedRelPaths']
+    if len(openedRelPaths):
       CLog.Info(f"Opened Paths : ")
-      for openedPath in openedPaths:
-        CLog.Info(f"             : {openedPath} | Loaded Successfully")
+      for penedRelPath in openedRelPaths:
+        CLog.Info(f"             : {penedRelPath} | Loaded Successfully")
     else:
       CLog.Warn(f"Can't load Recent Opened Paths : not found! | Path to DemoData.db choosed instead")
-    return openedPaths
+    return openedRelPaths
     
     
   @staticmethod
-  def SetOpenedPathsConfig(openedPaths: list[str]):
-    Config.configDict['openedPaths'] = openedPaths
+  def SetOpenedRefPathsConfig(openedRelPaths: list[str]):
+    Config.configDict['openedRelPaths'] = openedRelPaths
     
   
   @staticmethod
