@@ -122,7 +122,6 @@ class Config:
       CLog.Error("Can't load config file | Will revert back to default")
       Config.SaveConfig()
 
-Config.LoadConfig()
 
 
 if __name__ == '__main__':
@@ -132,5 +131,6 @@ if __name__ == '__main__':
   # conf = Config.SaveConfig()
 
   
+  Config.LoadConfig()
 
   print(Config.GetThemeConfig())

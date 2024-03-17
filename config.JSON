@@ -1,7 +1,7 @@
 {
-    "themeName": "AZUREDARK",
-    "winSizeX": 1228,
-    "winSizeY": 450,
+    "themeName": "FORESTLIGHT",
+    "winSizeX": 1361,
+    "winSizeY": 555,
     "winState": "NORMAL",
     "openedRelPaths": [
         "databases\\StockNew.db"

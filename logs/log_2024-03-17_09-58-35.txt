@@ -1,0 +1,24 @@
+Infos   : Logging On
+Infos   : Window State : NORMAL | Loaded Successfully
+Infos   : Size Loaded : X = 1228, Y = 450 | Loaded Successfully
+Infos   : Relative Directory : databases | Loaded Successfully
+Traces  : Setup new path in a file manager K:\Github\MedEase\databases
+Traces  : Setup new path in a file manager K:\Github\MedEase\databases
+Infos   : Theme : AZUREDARK | Loaded Successfully
+Infos   : Opened Paths : 
+Infos   :              : databases\StockNew.db | Loaded Successfully
+Infos   : Database : K:\Github\MedEase\databases\StockNew.db has Opened
+Traces  : Main Application Destroyed
+Infos   : MainFrame : has been destroyed from memory
+Infos   : MainMenu : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : K:\Github\MedEase\databases\StockNew.db has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+

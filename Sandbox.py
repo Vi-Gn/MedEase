@@ -25,6 +25,7 @@ from CLog import *
 
 
 def main():
+  Config.LoadConfig()
   app: Application = Application()
   app.framedTableFile.table.bind('<Double-1>', Interactions.OpenFramedTable)
   
