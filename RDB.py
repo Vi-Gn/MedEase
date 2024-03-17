@@ -15,42 +15,9 @@ limitations under the License.
 """
 
 
-
-
 import sqlite3
+from CLog import * 
 
-"""
-# data = sqlite3.connect('MedStocks.db')
-# table = 'stocks'
-# create_table = \""" CREATE TABLE IF NOT EXISTS projects (
-  
-#                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-#                         name text NOT NULL,
-#                         begin_date text,
-#                         end_date text
-                        
-#                     ); \"""
-                                    
-# data.execute(f"create table {table} (id INTEGER PRIMARY KEY AUTOINCREMENT,\
-#                                     name VARCHAR(25),\
-#                                     price FLOAT,\
-#                                     quantity INT\
-#                                     )\
-#                                     ")
-
-# data.execute(f"INSERT INTO  {table}(name, price, quantity)\
-#               VALUES ( 'hmd', 0.0, 99999)"
-#             )
-#
-# data.commit()
-#
-# cursor = data.execute( f"SELECT * FROM {table}")
-# print(cursor.fetchall())
-"""
-
-
-def warn(*kwarg):
-  print(kwarg)
 
 
 class RDB():
@@ -60,8 +27,15 @@ class RDB():
       self.cursor = self.database.cursor()
       self.table = 'stocks'
 
+      
     def __del__(self):
-      print(f"{self.databaseName} has been destroyed from memory")
+      print('RDB Del')
+      try:
+        CLog.Info(f"{self.databaseName} has been destroyed from memory")
+        
+      except Exception as e:
+        print(e)
+        
     
     def createTable(self, table: str = 'stocks') -> None:
       self.table = table
@@ -77,10 +51,10 @@ class RDB():
                   ); """)
 
       except Exception as e:
-          print('wdwd',e)
+          CLog.Error(str(e))
 
     def save(self):
-      print(f"DB : {self.databaseName} has been saved successfully")
+      CLog.Trace(f"DB : {self.databaseName} has been saved successfully")
       self.database.commit()
 
 
@@ -140,21 +114,21 @@ class RDB():
 
     def getRef(self, ref: int, cols: str = '*'):
         if not(self.existsRef(ref)):
-            print(f"{ref =} doesn't exist")
+            CLog.Error(f"{ref =} doesn't exist")
             return
         self.cursor.execute(f'SELECT {cols} FROM {self.table} WHERE ref={ref}')
         return self.cursor.fetchone()
 
     def getLabel(self, label: str, cols: str = '*'):
         if not(self.existsLabel(label)):
-            print(f"{label =} doesn't exist")
+            CLog.Error(f"{label =} doesn't exist")
             return
         self.cursor.execute(f'SELECT {cols} FROM {self.table} WHERE label="{label}"')
         return self.cursor.fetchone()
 
     def getLabelContain(self, label: str, cols: str = '*'):
         if not(self.existsLabelContain(label)):
-            print(f"{label =} doesn't exist")
+            CLog.Error(f"{label =} doesn't exist")
             return
         self.cursor.execute(f"SELECT {cols} FROM {self.table} WHERE label like'%{label}%'")
         return self.cursor.fetchall()
@@ -165,8 +139,9 @@ class RDB():
 
     def modifyAllByRef(self, ref: int, label: str, description: str, quantity: int, price: float):
         if not(self.existsRef(ref)):
-            print(f"{ref =} doesn't exist")
+            CLog.Error(f"{ref =} doesn't exist")
             return
+        CLog.Trace(f"Row with {ref = } is being modified")
         update = f''' UPDATE {self.table}
                       SET label = "{label}" ,
                           description = "{description}" ,
@@ -174,40 +149,56 @@ class RDB():
                           price = {price}
                       WHERE ref = {ref};
         '''
-        self.cursor.execute(update)
+        try:
+          self.cursor.execute(update)
+        except Exception as e:
+          CLog.Error(f"Row with {ref = } is  Can't be modified | Err msg : {str(e)}")
+        else:
+          CLog.Trace(f"Row with {ref = } is modified successfuly")
         
 
     def modifyColByRef(self, ref: int, col:str, content):
         if not(self.existsRef(ref)):
-            print(f"{ref =} doesn't exist")
+            CLog.Error(f"{ref =} doesn't exist")
             return
-        print(col)
+        CLog.Trace(f"Column : {col} is being modified with {ref = }")
         if col.lower() == "label":
           if self.existsLabel(content):
-            print(f"Label = {content} already exists")
+            CLog.Error(f"Label = {content} already exists")
             return -1
         update = f''' UPDATE {self.table}
                    SET {col} = "{content}" 
                    WHERE ref = {ref};
         '''
-        self.cursor.execute(update)
+        try:
+          self.cursor.execute(update)
+        except Exception as e:
+          CLog.Error(f"Column : {col} Can't be modified with {ref = } | Err msg : {str(e)}")
+        else:
+          CLog.Trace(f"Column : {col} is modified successfuly with {ref = }")
         
 
     def modifyColByLabel(self, label: str, col, content):
         if not(self.existsLabel(label)):
-            print(f"{label =} doesn't exist")
+            CLog.Error(f"{label =} doesn't exist")
             return
-        print(f"label cond : {label}, col name : {col}, its content : {content}")
+        CLog.Trace(f"{col} of row with {label =} is being modified successfully with : {content}")
         update = f''' UPDATE {self.table}
                    SET {col} = "{content}" 
                    WHERE label = "{label}";
         '''
-        self.cursor.execute(update)
+        try:
+          self.cursor.execute(update)
+        except Exception as e:
+          CLog.Error(f"{col} of row with {label =} Can't be modified with : {content} | Err msg : {str(e)}")
+        else:      
+          CLog.Trace(f"{col} of row with {label =} is modified successfully with : {content}")
+       
         
 
     def modifyAllByLabel(self, oldLabel: str, label: str, description: str, quantity: int, price: float):
         if not(self.existsLabel(oldLabel)):
-            print(f"{label =} doesn't exist")
+            CLog.Error(f"{label =} doesn't exist")
             return
         update = f''' UPDATE {self.table}
                    SET label = "{label}" ,
@@ -227,37 +218,40 @@ class RDB():
         
     def removeByRef(self, ref: int):
         if not(self.existsRef(ref)):
-            print(f"{ref =} doesn't exist")
+            CLog.Error(f"{ref =} doesn't exist")
             return
         self.cursor.execute(f"DELETE FROM {self.table} WHERE ref = {ref};")
         
         
     def removeByLabel(self, label: str):
         if not(self.existsLabel(label)):
-            print(f"{label =} doesn't exist")
+            CLog.Error(f"{label =} doesn't exist")
             return
         self.cursor.execute(f"DELETE FROM {self.table} WHERE label = '{label}';")
         
 
     def checkForQuantityByRef(self, ref: int, quantity: int):
         if not(self.existsRef(ref)):
-            print(f"{ref =} doesn't exist")
+            CLog.Error(f"{ref =} doesn't exist")
             return
         return (self.getRef(ref, 'quantity')[0] >= quantity)
 
     def checkForQuantityByLabel(self, label: str, quantity: int):
         if not(self.existsLabel(label)):
-            print(f"{label =} doesn't exist")
+            CLog.Error(f"{label =} doesn't exist")
             return False
         return (self.getLabel(label, 'quantity')[0] >= quantity)
 
+ 
+      
     def consumeByRef(self, ref: int, quantity: int):
         if not(self.existsRef(ref)):
-            print(f"{ref =} doesn't exist")
+            CLog.Error(f"{ref =} doesn't exist")
             return
         hasQuantity = self.checkForQuantityByRef(ref, quantity)
         if hasQuantity == False:
-            print("We Don't have this much quantity")
+            Label = self.getRef(ref=ref, cols='label')
+            CLog.Warn(f"{Label =} Doesn't have this much quantity:({quantity}) to be consumed")
             return
         update = f''' UPDATE {self.table}
                            SET quantity = quantity - {quantity}
@@ -266,24 +260,24 @@ class RDB():
         self.cursor.execute(update)
         
         
-    def consumeByLabel(self, label: str, quantity: int):
-        if not(self.existsLabel(label)):
-            print(f"{label =} doesn't exist")
+    def consumeByLabel(self, Label: str, quantity: int):
+        if not(self.existsLabel(Label)):
+            CLog.Error(f"{Label =} doesn't exist")
             return
-        hasQuantity = self.checkForQuantityByLabel(label, quantity)
+        hasQuantity = self.checkForQuantityByLabel(Label, quantity)
         if hasQuantity == False:
-            print("We Don't have this much quantity")
+            CLog.Warn(f"{Label =} Doesn't have this much quantity:({quantity}) to be consumed")
             return
         update = f''' UPDATE {self.table}
                                    SET quantity = quantity - {quantity}
-                                   WHERE label = "{label};
+                                   WHERE Label = "{Label};
                         '''
         self.cursor.execute(update)
         
 
     def addQuantityByRef(self, ref: int, quantity: int):
         if not(self.existsRef(ref)):
-            print(f"{ref =} doesn't exist")
+            CLog.Error(f"{ref =} doesn't exist")
             return
         update = f''' UPDATE {self.table}
                            SET quantity = quantity + {quantity}
@@ -294,7 +288,7 @@ class RDB():
         
     def addQuantityByLabel(self, label: str, quantity: int):
         if not(self.existsLabel(label)):
-            print(f"{label =} doesn't exist")
+            CLog.Error(f"{label =} doesn't exist")
             return
         update = f''' UPDATE {self.table}
                                    SET quantity = quantity + {quantity}
@@ -304,8 +298,13 @@ class RDB():
         
 
     def printData(self, cols: str = '*'):
+        Column = cols
+        if cols == '*':
+          Column = "All"
+          
+        CLog.Trace(f"Log Database Table ({Column}) : ")
         for item in self.getData(cols):
-            print(item)
+            CLog.Trace(f"{item = }")
 
     def existsRef(self, ref: int):
         self.cursor.execute(f"SELECT COUNT(*) FROM {self.table} WHERE ref={ref}")
@@ -331,7 +330,7 @@ class DataShower:
   
   @staticmethod
   def showMenu():
-    print('''show''')
+    CLog.Info('''show menu''')
     menu = int(input(DataShower.msgshow))
     match (menu):
       case (1):
@@ -353,9 +352,9 @@ class DataShower:
     if ldata == None:
       raise Exception('data invalid')
     data = ldata
-    print('''all''')
+    CLog.Trace('''show all items''')
     for item in data.getData('*'):
-          print(item)
+          CLog.Info(item)
       
 
   @staticmethod
@@ -363,37 +362,37 @@ class DataShower:
     if ldata == None:
       raise Exception('data invalid')
     data = ldata
-    print('''label''')
+    CLog.Trace('''show all label''')
     for item in data.getData('label'):
-          print(item)
+          CLog.Info(item)
 
   @staticmethod
   def showDescription(ldata):
-    print('''description''')
+    CLog.Trace('''show all descriptions''')
     if ldata == None:
       raise Exception('data invalid')
     data = ldata
     for item in data.getData('description'):
-          print(item)
+          CLog.Info(item)
       
 
   @staticmethod
   def showQuantity(ldata):
-    print('''quantity''')
+    CLog.Trace('''show all quantities''')
     if ldata == None:
       raise Exception('data invalid')
     data = ldata
     for item in data.getData('quantity'):
-      print(item)
+      CLog.Info(item)
 
   @staticmethod
   def showPrice(ldata):
-    print('''price''')
+    CLog.Trace('''show all prices''')
     if ldata == None:
       raise Exception('data invalid')
     data = ldata
     for item in data.getData('price'):
-      print(item)
+      CLog.Info(item)
       
 class DataAdder:
   msgaddstock: str = '''
@@ -405,7 +404,7 @@ class DataAdder:
   def addMenu(ldata = None, label: str = '', description: str = '', quantity: int = 0, price: float = 0.0, action: str=''):
     """@action => p = add price; q = modify price; qp = both"""
     
-    print('''add''')
+    CLog.Trace('''Add Item''')
     if label == '':
       label = input('Enter label')
     if ldata == None:
@@ -420,13 +419,13 @@ class DataAdder:
           if(quantity == 0):
             quantity = int(input('Enter quantity to add'))
           data.addQuantityByLabel(label, quantity)
-          print(f'the item with name : {label} got an addition in quantity by {quantity}')
+          CLog.Info(f'the item with name : {label} got an addition in quantity by {quantity}')
           return
         case ('p'):
           if(price == 0.0):
             price = float(input('Important! Erase old Price; Enter the new price'))
           data.modifyColByLabel(label, 'price', price)
-          print(f'the item\'s new price = {price}')
+          CLog.Info(f'the item\'s new price = {price}')
           return
         case ('qp'):
           if(quantity == 0):
@@ -434,9 +433,9 @@ class DataAdder:
           if(price == 0.0):
             price = float(input('Important! Erase old Price; Enter the new price'))
           data.addQuantityByLabel(label, quantity)
-          print(f'the item with name : {label} got an addition in quantity by {quantity}')
+          CLog.Info(f'the item with name : {label} got an addition in quantity by {quantity}')
           data.modifyColByLabel(label, 'price', price)
-          print(f'the item\'s new price = {price}')
+          CLog.Info(f'the item\'s new price = {price}')
           return
         case _:
           raise Exception('action should not be different than p, q, qp')
@@ -453,17 +452,6 @@ class DataAdder:
     data.insert(label, description, quantity, price)
     
     
-    
-  @staticmethod
-  def addMenuUICheck(ldata = None, label: str = ''):
-    """ @function shall return => p = add price; q = modify price; qp = both """
-    print('''add''')
-    if ldata == None:
-      raise Exception('data invalid')
-    data = ldata
-    if data.existsLabel(label):
-      return False
-    return True
       
       
   @staticmethod
@@ -693,24 +681,25 @@ class DataFinder:
   '''
   @staticmethod
   def searchMenu(ldata):
-    print('''search''')
+    CLog.Trace('''search menu''')
     if ldata == None:
       raise Exception('data invalid')
     data = ldata
     menu = int(input(DataFinder.msgsearch))
     match (menu):
         case (1):
-            print('''ref''')
+            CLog.Trace('''search by ref''')
             ref = int(input('enter the ref id to search and show item'))
-            print(data.getRef(ref))
+            CLog.Info(data.getRef(ref))
         case (2):
-            print('''label''')
+            CLog.Trace('''search by label''')
             label = input('Enter the label to search and show item')
-            print(data.getLabel(label))
+            CLog.Info(data.getLabel(label))
         case (3):
-            print('''label(contain)''')
+            CLog.Trace('''search by label(contain)''')
             label = input('Enter the label or sublabelle to search and show item')
-            print(data.getLabelContain(label))
+            for item in data.getLabelContain(label):
+              CLog.Info(item)
         case (0):
           return
 
@@ -728,21 +717,21 @@ class DataRemover:
   '''
   @staticmethod
   def removeMenu(ldata):
-    print('''remove''')
+    CLog.Trace('''remove menu''')
     if ldata == None:
       raise Exception('data invalid')
     data = ldata
     menu = int(input(DataRemover.msgremove))
     match (menu):
       case (1):
-        print('''all''')
+        CLog.Trace('''remove all''')
         data.removeAll()
       case (2):
-        print('''ref''')
+        CLog.Trace('''remove by ref''')
         ref = int(input('enter the ref id to remove item'))
         data.removeByRef(ref)
       case (3):
-        print('''label''')
+        CLog.Trace('''remove by label''')
         label = input('Enter the label to remove item')
         data.removeByLabel(label)
       case (0):
@@ -750,29 +739,29 @@ class DataRemover:
       
   @staticmethod
   def consumeQuantityMenu(ldata):
-    print('''consume quantity''')
+    CLog.Trace('''consume quantity''')
     if ldata == None:
       raise Exception('data invalid')
     data = ldata
     menu = int(input(DataRemover.msgconsume))
     match (menu):
       case (1):
-        print('''ref''')
+        CLog.Trace('''consume quantity by ref''')
         ref = int(input('enter the ref id to consume item'))
         if data.existsRef(ref):
           quantity = int(input('enter the quantity to consume'))
           data.consumeByRef(ref, quantity)
         else:
-          print(f'ref : {ref} is not found!')
+          CLog.Error(f'ref : {ref} is not found!')
 
       case (2):
-        print('''label''')
+        CLog.Trace('''consume quantity by label''')
         label = input('Enter the label to consume item')
         if data.existsLabel(label):
           quantity = int(input('enter the quantity to consume'))
           data.consumeByLabel(label, quantity)
         else:
-          print(f'label : {label} is not found!')
+          CLog.Error(f'label : {label} is not found!')
       case (0):
         return
         

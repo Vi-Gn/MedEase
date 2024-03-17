@@ -27,6 +27,7 @@ from tkinter.ttk import Scrollbar as TScrollbar
 from typing import Literal
 
 
+from CLog import *
 from FileManager import TFileManager
 from SubWindow import SubWindow
 from RDB import *
@@ -51,6 +52,9 @@ class FramedTable(TFrame):
     self.IsActive: bool = True
     self.database: RDB
   
+  def __del__(self):
+    print('FrameTable Del')
+    
   def onTabChanged(self, e):
     FramedTableDataTemp = e.widget.nametowidget(e.widget.select()) 
     self.app.framedTableData = FramedTableDataTemp
@@ -83,7 +87,6 @@ class FramedTable(TFrame):
       for column in self.columns:
         currentColumn = column.lower()
         currentColumnText = currentColumn.capitalize()
-        print(currentColumn)
         anchor: Literal['center', 'w'] = 'center' 
         minwidth=80
         stretch=False
@@ -287,8 +290,8 @@ class FramedTable(TFrame):
     
     prc = Price.get()
     Price.delete(0,'end')
-    
-    labelNoFound = DataAdder().addMenuUICheck(self.database, lbl)
+    labelNoFound = not self.database.existsLabel(lbl)
+    CLog.Trace(f"{labelNoFound = }")
     if labelNoFound == True:
         DataAdder().addMenuUI(self.database ,lbl, dsc, qtt, prc, '')
         # //todo 
@@ -380,7 +383,7 @@ class FramedTable(TFrame):
               self.database.removeByRef(id) 
             self.LoadDataTable()
       else:
-        print('trying to erase items from unactive tab ')
+        CLog.Error('Trying to erase items from unactive tab ')
   
   def CreateNewFile(self):
     # top = tk.Toplevel(self.app)
@@ -402,9 +405,9 @@ class FramedTable(TFrame):
     btn.grid(row=4, column=1, sticky='nsew', padx=5, pady=5)
     
     
-    
-  def SearchByLabel(self):
-    top = SubWindow(self.app, title='Search Items by Label', width=700, height=200)
+  def ModifyChoose(self):
+    top = SubWindow(self.app, title='Modify Items by Label', width=540, height=217)
+    top.minsize(width=536, height=210)
     UpperFrame = TFrame(top)
     UpperFrame.pack(fill='both', expand=1, anchor='center')
     for i in range(3):
@@ -420,34 +423,186 @@ class FramedTable(TFrame):
     
     MiddleFrame = TFrame(top)
     MiddleFrame.pack(fill='both', expand=1, anchor='center')
-    for i in range(6):
-      MiddleFrame.grid_columnconfigure(i, weight=1, minsize=10)
+    for i in range(3):
+      MiddleFrame.grid_columnconfigure(i, weight=0, minsize=0)
       
-    radioRef = ttk.Radiobutton(MiddleFrame, text="ByRef", value="ref", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Ref') , selectedValueRadio.set("ref") ] )
-    radioRef.grid(row=3, column=1, sticky='nsew')
+    MiddleFrame.grid_columnconfigure(0, weight=1, minsize=10)
+    # MiddleFrame.grid_columnconfigure(1, weight=0, minsize=100)
+    # MiddleFrame.grid_columnconfigure(2, weight=0, minsize=100)
+    MiddleFrame.grid_columnconfigure(3, weight=1, minsize=10)
     
-    radioLabel = ttk.Radiobutton(MiddleFrame, text="ByLabel", value="label", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Label') , selectedValueRadio.set("label") ] )
-    radioLabel.grid(row=3, column=2, sticky='nsew')
     
-    radioLabelDesc = ttk.Radiobutton(MiddleFrame, text="ByDescription", value="description", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Description') , selectedValueRadio.set("description") ] )
-    radioLabelDesc.grid(row=3, column=3, sticky='nsew')
     
-    radioLabelQty = ttk.Radiobutton(MiddleFrame, text="ByQuantity", value="quantity", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Quantity') , selectedValueRadio.set("quantity") ] )
-    radioLabelQty.grid(row=3, column=4, sticky='nsew')
+    radioRef = ttk.Radiobutton(MiddleFrame, text="ByRef", value="ref", variable=selectedValueRadio, command=lambda : [ LabelText.set('Choose item By Ref') , selectedValueRadio.set("ref") ] )
+    radioRef.grid(row=0, column=1, sticky='nsew', padx=12, pady=5)
     
-    radioLabelPrice = ttk.Radiobutton(MiddleFrame, text="ByPrice", value="price", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Price') , selectedValueRadio.set("price") ] )
-    radioLabelPrice.grid(row=3, column=5, sticky='nsew')
+    radioLabel = ttk.Radiobutton(MiddleFrame, text="ByLabel", value="label", variable=selectedValueRadio, command=lambda : [ LabelText.set('Choose item By Label') , selectedValueRadio.set("label") ] )
+    radioLabel.grid(row=0, column=2, sticky='nsew', padx=12, pady=5)
+    
     
     selectedValueRadio.set("label")
   #################################################
       
+      
     lbl1 = ttk.Label(UpperFrame, textvariable=LabelText)
     lbl1.grid(row=1, column=1, sticky='nsew', padx=5, pady=5)
-    Label = ttk.Entry(UpperFrame)
-    Label.grid(row=2, column=1, sticky='nsew', padx=5, pady=5)
+    Label = ttk.Entry(UpperFrame, width=120)
+    Label.grid(row=2, column=1, sticky='nsew', padx=5, ipady=5)
+    # Label.bind("<KeyRelease>", lambda e : self.__SearchColumnCommand(content=e.widget.get(), colName=selectedValueRadio.get()))
+    
+    
+    
+    LabelText.set('Choose item By Label')
+    LowerFrame = TFrame(top)
+    LowerFrame.pack(fill='both', expand=1, anchor='center')
+    for i in range(4):
+      LowerFrame.grid_columnconfigure(i, weight=1, minsize=20)
+    for i in range(2):
+      LowerFrame.grid_rowconfigure(i, minsize=30)
+    btnSet = ttk.Button(LowerFrame,text='Set', command=lambda:  self.__OpenModifyMenu(value=Label.get(), colName=selectedValueRadio.get() ,topL=top) )
+    btnSet.grid(row=0, column=1, sticky='nsew', padx=5, pady=5)
+    btnCancel = ttk.Button(LowerFrame,text='Cancel', command=lambda: top.destroy())
+    btnCancel.grid(row=0, column=2, sticky='nsew', padx=5, pady=5)
+    
+      
+      
+  def __OpenModifyMenu(self, value, colName: str, topL: SubWindow): 
+    match (colName):
+      case ('ref'):
+        if not self.database.existsRef(value):
+          CLog.Error(f'Ref : {value} is not available')
+          messagebox.showwarning(title="Can't Modify !", message=f"Ref : {value} is not available")
+          topL.focus()
+          return
+    
+      case ('label'):
+         if not self.database.existsLabel(value):
+          CLog.Error(f'Label : {value} is not available')
+          messagebox.showwarning(title="Can't Modify !", message=f"Label : {value} is not available")
+          topL.focus()
+          return
+      case _:
+        raise Exception('__OpenModifyMenu() only supports Ref and Label as colName')
+      
+    if topL:
+      topL.destroy()
+      
+    top = SubWindow(self.app, title=f'Modify {colName} by Label', width=540, height=217)
+    top.minsize(width=536, height=255)
+    UpperFrame = TFrame(top)
+    UpperFrame.pack(fill='both', expand=1, anchor='center')
+    for i in range(3):
+      UpperFrame.grid_columnconfigure(i, weight=1, minsize=20)
+    for i in range(3):
+      UpperFrame.grid_rowconfigure(i, minsize=30)
+    
+  #################################################
+  
+    selectedValueRadio = tkinter.StringVar()  
+    LabelText = tkinter.StringVar() 
+    
+    MiddleFrame = TFrame(top)
+    MiddleFrame.pack(fill='both', expand=1, anchor='center')
+    for i in range(4):
+      MiddleFrame.grid_columnconfigure(i, weight=0, minsize=0)
+      
+    MiddleFrame.grid_columnconfigure(0, weight=1, minsize=10)
+    # MiddleFrame.grid_columnconfigure(1, weight=0, minsize=100)
+    # MiddleFrame.grid_columnconfigure(2, weight=0, minsize=100)
+    MiddleFrame.grid_columnconfigure(4, weight=1, minsize=10)
+    
+    
+    radioLabelDesc = ttk.Radiobutton(MiddleFrame, text="ByDescription", value="description", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Description') , selectedValueRadio.set("description") ] )
+    radioLabelDesc.grid(row=0, column=1, sticky='nsew', padx=2,)
+    
+    radioLabelQty = ttk.Radiobutton(MiddleFrame, text="ByQuantity", value="quantity", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Quantity') , selectedValueRadio.set("quantity") ] )
+    radioLabelQty.grid(row=0, column=2, sticky='nsew', padx=2,)
+    
+    radioLabelPrice = ttk.Radiobutton(MiddleFrame, text="ByPrice", value="price", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Price') , selectedValueRadio.set("price") ] )
+    radioLabelPrice.grid(row=0, column=3, sticky='nsew', padx=2,)
+    
+    selectedValueRadio.set("label")
+    
+  #################################################
+      
+    # done it here instead of above cuz we need that LabelText Variable to be Initialized First
+    lbl1 = ttk.Label(UpperFrame, textvariable=LabelText)
+    lbl1.grid(row=1, column=1, sticky='nsew', padx=5, pady=5)
+    Label = ttk.Entry(UpperFrame, width=120)
+    Label.grid(row=2, column=1, sticky='nsew', padx=5, ipady=5)
     Label.bind("<KeyRelease>", lambda e : self.__SearchColumnCommand(content=e.widget.get(), colName=selectedValueRadio.get()))
     
+  #################################################
+  
+    LabelText.set('Search By Label')
+    LowerFrame = TFrame(top)
+    LowerFrame.pack(fill='both', expand=1, anchor='center')
+    for i in range(4):
+      LowerFrame.grid_columnconfigure(i, weight=1, minsize=20)
+    for i in range(2):
+      LowerFrame.grid_rowconfigure(i, minsize=30)
+    btnSet = ttk.Button(LowerFrame,text='Set', command=lambda: [ self.__SearchColumnCommand(content=Label.get(), colName=selectedValueRadio.get()), top.destroy() ] )
+    btnSet.grid(row=0, column=1, sticky='nsew', padx=5, pady=5)
+    btnCancel = ttk.Button(LowerFrame,text='Cancel', command=lambda: top.destroy())
+    btnCancel.grid(row=0, column=2, sticky='nsew', padx=5, pady=5)
     
+    
+    
+    
+      
+  def SearchByLabel(self):
+    top = SubWindow(self.app, title='Search Items by Label', width=700, height=255)
+    top.minsize(width=536, height=255)
+    UpperFrame = TFrame(top)
+    UpperFrame.pack(fill='both', expand=1, anchor='center')
+    for i in range(3):
+      UpperFrame.grid_columnconfigure(i, weight=1, minsize=20)
+    for i in range(3):
+      UpperFrame.grid_rowconfigure(i, minsize=30)
+    
+  #################################################
+  
+    selectedValueRadio = tkinter.StringVar()  
+    LabelText = tkinter.StringVar() 
+    
+    MiddleFrame = TFrame(top)
+    MiddleFrame.pack(fill='both', expand=1, anchor='center')
+    for i in range(7):
+      MiddleFrame.grid_columnconfigure(i, weight=0, minsize=0)
+      
+    MiddleFrame.grid_columnconfigure(0, weight=1, minsize=10)
+    # MiddleFrame.grid_columnconfigure(1, weight=0, minsize=100)
+    # MiddleFrame.grid_columnconfigure(2, weight=0, minsize=100)
+    MiddleFrame.grid_columnconfigure(6, weight=1, minsize=10)
+    
+    radioRef = ttk.Radiobutton(MiddleFrame, text="ByRef", value="ref", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Ref') , selectedValueRadio.set("ref") ] )
+    radioRef.grid(row=0, column=1, sticky='nsew', padx=2,)
+    
+    radioLabel = ttk.Radiobutton(MiddleFrame, text="ByLabel", value="label", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Label') , selectedValueRadio.set("label") ] )
+    radioLabel.grid(row=0, column=2, sticky='nsew', padx=2,)
+    
+    radioLabelDesc = ttk.Radiobutton(MiddleFrame, text="ByDescription", value="description", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Description') , selectedValueRadio.set("description") ] )
+    radioLabelDesc.grid(row=0, column=3, sticky='nsew', padx=2,)
+    
+    radioLabelQty = ttk.Radiobutton(MiddleFrame, text="ByQuantity", value="quantity", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Quantity') , selectedValueRadio.set("quantity") ] )
+    radioLabelQty.grid(row=0, column=4, sticky='nsew', padx=2,)
+    
+    radioLabelPrice = ttk.Radiobutton(MiddleFrame, text="ByPrice", value="price", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Price') , selectedValueRadio.set("price") ] )
+    radioLabelPrice.grid(row=0, column=5, sticky='nsew', padx=2,)
+    
+    selectedValueRadio.set("label")
+    
+  #################################################
+      
+    # done it here instead of above cuz we need that LabelText Variable to be Initialized First
+    lbl1 = ttk.Label(UpperFrame, textvariable=LabelText)
+    lbl1.grid(row=1, column=1, sticky='nsew', padx=5, pady=5)
+    Label = ttk.Entry(UpperFrame, width=120)
+    Label.grid(row=2, column=1, sticky='nsew', padx=5, ipady=5)
+    Label.bind("<KeyRelease>", lambda e : self.__SearchColumnCommand(content=e.widget.get(), colName=selectedValueRadio.get()))
+    
+  #################################################
+  
     LabelText.set('Search By Label')
     LowerFrame = TFrame(top)
     LowerFrame.pack(fill='both', expand=1, anchor='center')
@@ -476,6 +631,12 @@ class FramedTable(TFrame):
     
     
   def ModifyByRefAction(self, ref, topLevel):
+    if not self.database.existsRef(ref):
+      CLog.Error(f'Ref : {ref} is not available')
+      messagebox.showwarning(title="Can't Modify !", message=f"Ref : {ref} is not available")
+      topLevel.focus()
+      return
+    
     if topLevel:
       topLevel.destroy()
     top = SubWindow(self.app, title='Modify Item', width=700, height=200)
@@ -526,10 +687,19 @@ class FramedTable(TFrame):
     
     
   def __ModifyLabelCommand(self, oldLabel ,label, description, quantity, price):
-    self.database.modifyAllByLabel( oldLabel=oldLabel ,label=label.get(), description=description.get(), quantity=quantity.get(), price=price.get()) 
+    self.database.modifyAllByLabel( oldLabel=oldLabel ,label=label, description=description, quantity=quantity, price=price) 
     self.LoadDataTable()
+    CLog.Trace(f'Label : {oldLabel} is modified successfully by {label =}, {description =}, {quantity =}, {price =}')
     
   def ModifyByLabelAction(self, oldLabel, topLevel):
+    if not self.database.existsLabel(oldLabel):
+      CLog.Error(f'Label : {oldLabel} is not available')
+      messagebox.showwarning(title="Can't Modify !", message=f"Label : {oldLabel} is not available")
+      topLevel.focus()
+      return
+    
+    CLog.Trace(f'Label : {oldLabel} is being modified')
+    
     if topLevel:
       topLevel.destroy()
     top = SubWindow(self.app, title='Modify Item', width=700, height=200)
@@ -572,7 +742,7 @@ class FramedTable(TFrame):
     for i in range(2):
       LowerFrame.grid_rowconfigure(i, minsize=30)
     btnSet = ttk.Button(LowerFrame,text='Set', 
-              command=lambda: [ self.__ModifyLabelCommand(oldLabel=oldLabel, label=Label, description=Description, quantity=Quantity, price=Price), top.destroy() ] )
+              command=lambda: [ self.__ModifyLabelCommand(oldLabel=oldLabel, label=Label.get(), description=Description.get(), quantity=Quantity.get(), price=Price.get()), top.destroy() ] )
     btnSet.grid(row=0, column=1, sticky='nsew', padx=5, pady=5)
     btnCancel = ttk.Button(LowerFrame,text='Cancel', command=lambda: top.destroy())
     btnCancel.grid(row=0, column=2, sticky='nsew', padx=5, pady=5)

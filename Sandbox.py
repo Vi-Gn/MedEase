@@ -19,7 +19,7 @@ limitations under the License.
 
 from Application import *
 # from Application import Interactions
-
+from CLog import *
 
 
 
@@ -35,6 +35,7 @@ def main():
   framedTableData = FramedTable(frameTab=Application.Get().frameTabData, tabname='Demo')
   framedTableData.InitTableData(relpath='databases\\DemoData.db')
   app.mainloop()
+  
 
 
 
@@ -46,3 +47,5 @@ def main():
 
 if __name__ == '__main__':
   main()
+
+  ef = CLog.fLog

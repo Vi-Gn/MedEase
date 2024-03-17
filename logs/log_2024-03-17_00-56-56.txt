@@ -1,0 +1,8 @@
+Infos   : Logging On
+Infos   : CloseTab's name : Demo
+Infos   : CloseTab's path : C:\Users\Sphiyo\Desktop\MedEase\databases\DemoData.db
+Infos   : C:\Users\Sphiyo\Desktop\MedEase\databases\DemoData.db has been destroyed from memory
+rhdrthrth
+
+
+Infos   : Logging Off

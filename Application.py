@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
+from Enums import EThemeState
 import os
 from tkinter import Tk as TTk, messagebox, ttk
 from typing import Self
@@ -25,6 +25,7 @@ from MainFrame import MainFrame
 from MainMenu import MainMenu
 from FileManager import TFileManager
 
+from CLog import *
     
 class Application(TTk):
   _instance = None
@@ -54,33 +55,81 @@ class Application(TTk):
     self.framedTableFile.InitTableFile(relpath='-1',show='tree headings')
     self.frameTabData = FrameTab(mainFrame=self.mainframe, colIndex=1, width=100)
     self.framedTableData: FramedTable
-    self.darkTheme: bool = True
+    self.Theme: EThemeState = EThemeState.VISTA
     self.style = ttk.Style()
     self.InitThemes()
-    self.SetDarkTheme(self.darkTheme)
+    self.SetTheme(self.Theme)
     self.bind("<F11>", self.ToggleFullScreen)
+    self.bind("<F7>", self.PreviousTheme)
+    self.bind("<F8>", self.NextTheme)
     self.protocol("WM_DELETE_WINDOW", self.onClose)
 
+  def __del__(self):
+    print('Application Del')
+    
   def InitThemes(self):
-    self.style.tk.call("source", "ForestTheme\\forest-dark.tcl")
-    self.style.tk.call("source", "ForestTheme\\forest-light.tcl")
-  def SetDarkTheme(self, cond):
-    """ themeName: [dark, light] """
-    if cond:
-      themeName = 'dark'
-    else:
-      themeName = 'light'
-    # Source : https://github.com/rdbende/Forest-ttk-theme
-    filePath = TFileManager(f"ForestTheme\\forest-{themeName}.tcl")
-    self.style.theme_use( f"forest-{themeName}")
-
-  def ToggleTheme(self):
-    if self.darkTheme:
-      self.darkTheme = False
-    else:
-      self.darkTheme = True 
+    self.style.tk.call("source", "Themes\\ForestTheme\\forest-dark.tcl")
+    self.style.tk.call("source", "Themes\\ForestTheme\\forest-light.tcl")
+    self.style.tk.call("source", "Themes/AzureTheme/azure.tcl")
+    
+  def SetTheme(self, eThemeState: EThemeState):
+    """ themeName: [EThemeState.DEFAULT,  EThemeState.LIGHT,  EThemeState.DARK] """
+    self.Theme = eThemeState
+    match (eThemeState):
       
-    self.SetDarkTheme(self.darkTheme)
+      case (EThemeState.DEFAULT):
+        self.style.theme_use( f"default")
+        
+      case (EThemeState.FORESTLIGHT):
+        # Source : https://github.com/rdbende/Forest-ttk-theme
+        self.style.theme_use( f"forest-light")
+        
+      case (EThemeState.FORESTDARK):
+        # Source : https://github.com/rdbende/Forest-ttk-theme
+        self.style.theme_use( f"forest-dark")
+      
+      case (EThemeState.AZURELIGHT):
+        # Source : https://github.com/rdbende/Azure-ttk-theme
+        self.style.theme_use("azure-light")
+        
+      case (EThemeState.AZUREDARK):
+        # Source : https://github.com/rdbende/Azure-ttk-theme
+        self.style.theme_use("azure-dark")
+      
+      case (EThemeState.ALT):
+        self.style.theme_use( f"alt")
+        
+      case (EThemeState.CLAM):
+        self.style.theme_use( f"clam")
+        
+      case (EThemeState.VISTA):
+        self.style.theme_use( f"vista")
+        
+      case (EThemeState.XPNATIVE):
+        self.style.theme_use( f"xpnative")
+        
+      case (EThemeState.WINNATIVE):
+        self.style.theme_use( f"winnative")
+        
+      case (EThemeState.CLASSIC):
+        self.style.theme_use( f"classic")
+        
+      case _:
+        raise Exception(f"There is no theme called {eThemeState}")
+      
+    
+    
+
+  def NextTheme(self, *args):    
+    self.Theme = EThemeState.next(self.Theme)
+    self.SetTheme(self.Theme)
+      
+
+  def PreviousTheme(self, *args):    
+    self.Theme = EThemeState.prev(self.Theme)
+    self.SetTheme(self.Theme)
+      
+      
     
   def CenterWindow(self):
     self.update_idletasks()
@@ -106,9 +155,9 @@ class Application(TTk):
     try:
       os.startfile(filePath)
     except FileNotFoundError:
-      print(f"Error: File '{filePath}' not found.")
+      CLog.Error(f"File '{filePath}' not found.")
     except OSError as e:
-      print(f"Error: {e}")
+      CLog.Error(f"{e}")
 
   def NeedsSave(self) -> bool:
     tabs = self.frameTabData.notebook.tabs()
@@ -124,8 +173,8 @@ class Application(TTk):
     if messagebox.askyesno(title='Quit', message='Are You Sure You Want To Quit !'):
       if self.NeedsSave():
         answer = messagebox.askyesnocancel(title='Closing App', message='Do you want to save changes?')
-        print(answer)    
         if answer == None:
+          CLog.Info(f"Close Event Canceled")    
           return
         if answer:
           tabs = self.frameTabData.notebook.tabs()
@@ -133,10 +182,10 @@ class Application(TTk):
             framedTableTemp: FramedTable = self.frameTabData.notebook.nametowidget(self.frameTabData.notebook.tabs()[i]) 
             
             if framedTableTemp.database.database.total_changes > 0:
-                print("There are pending changes that need to be saved (committed).")
+                CLog.Warn("There are pending changes that need to be saved (committed).")
                 framedTableTemp.SaveFile()
             else:
-                print("No pending changes to be saved.")
+                CLog.Info("No pending changes to be saved.")
           self.destroy()
         else:
           self.destroy()
@@ -180,14 +229,14 @@ class Interactions:
     tab_id = event.widget.identify(event.x, event.y)
     if tab_id and "label" in tab_id:
       indexTab = event.widget.index(f"@{event.x},{event.y}")
-      print(indexTab)
+      
       selected_tab = event.widget.tab(indexTab, 'text')
       framedTableTemp = event.widget.nametowidget(event.widget.tabs()[indexTab]) 
       pathToClose = framedTableTemp.fileManager.GetAbsolutePath()
-      print(pathToClose)
       Application.Get().frameTabData.openPaths.remove(pathToClose)
       event.widget.forget(f"@{event.x},{event.y}")
-      print(f"CloseTab : {selected_tab}------------------")
+      CLog.Info(f"CloseTab's name : {selected_tab}")
+      CLog.Info(f"CloseTab's path : {pathToClose}")
 
 
 
