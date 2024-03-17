@@ -1,0 +1,17 @@
+Infos   : Logging On
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\MedEase\databases
+Infos   : Database : C:\Users\Sphiyo\Desktop\MedEase\databases\DemoData.db has been created
+Traces  : SubWindow : Modify Items by Label has been created
+Traces  : SubWindow : Modify for Ref : 1 has been created
+Infos   : SubWindow : Modify Items by Ref has been destroyed from memory
+Traces  : Main Application Destroyed
+Infos   : MainMenu : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : SubWindow : Modify for Ref : 1 has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+

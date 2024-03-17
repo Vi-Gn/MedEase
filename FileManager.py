@@ -16,6 +16,7 @@ limitations under the License.
 
 
 
+from CLog import CLog
 from SubWindow import SubWindow
 
 
@@ -37,6 +38,7 @@ class TFileManager:
 
   def SetPathWorkdir(self, relPathWorkdir):
     self.__workdirAbs = os.path.abspath(relPathWorkdir)
+    CLog.Trace(f"Setup new path in a file manager {self.__workdirAbs}")
 
   def GetFileName(self):
     return os.path.basename(self.__workdirAbs)
@@ -53,12 +55,14 @@ class TFileManager:
       fullPath += '.db'
     f = open(fullPath, 'w')
     f.close()
+    CLog.Trace(f"Created a new database in {fullPath}")
     
 
-  def CreateFileAsk(self, filename):
-    fullPath = os.path.join(self.GetAbsolutePath(), filename)
-    f = open(fullPath, 'w')
-    f.close()
+  # def CreateFileAsk(self, filename):
+  #   fullPath = os.path.join(self.GetAbsolutePath(), filename)
+  #   f = open(fullPath, 'w')
+  #   f.close()
+  #   CLog.Trace(f"Created a new database in {fullPath}")
     
 
     

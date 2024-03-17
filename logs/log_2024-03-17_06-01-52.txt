@@ -1,0 +1,46 @@
+Infos   : Logging On
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\MedEase\databases
+Infos   : Database : C:\Users\Sphiyo\Desktop\MedEase\databases\DemoData.db has been created
+Traces  : SubWindow : Modify Items by Label has been created
+Traces  : SubWindow : Modify for Label : Aspirin has been created
+Infos   : SubWindow : Modify Items by Label has been destroyed from memory
+Traces  : description of row with label ='Aspirin' is being modified successfully with : fgmghmghm
+Traces  : description of row with label ='Aspirin' is modified successfully with : fgmghmghm
+Infos   : SubWindow : Modify for Label : Aspirin has been destroyed from memory
+Traces  : SubWindow : Modify Items by Label has been created
+Traces  : SubWindow : Modify for Label : Aspirin has been created
+Infos   : SubWindow : Modify Items by Label has been destroyed from memory
+Traces  : quantity of row with label ='Aspirin' is being modified successfully with : 45
+Traces  : quantity of row with label ='Aspirin' is modified successfully with : 45
+Infos   : SubWindow : Modify for Label : Aspirin has been destroyed from memory
+Traces  : SubWindow : Modify Items by Label has been created
+Traces  : SubWindow : Modify for Label : Aspirin has been created
+Infos   : SubWindow : Modify Items by Label has been destroyed from memory
+Traces  : price of row with label ='Aspirin' is being modified successfully with : 28
+Traces  : price of row with label ='Aspirin' is modified successfully with : 28
+Infos   : SubWindow : Modify for Label : Aspirin has been destroyed from memory
+Traces  : SubWindow : Modify Items by Label has been created
+Traces  : SubWindow : Modify for Label : Amoxicillin has been created
+Infos   : SubWindow : Modify Items by Label has been destroyed from memory
+Traces  : description of row with label ='Amoxicillin' is being modified successfully with : fnfgnfgnfgn
+Traces  : description of row with label ='Amoxicillin' is modified successfully with : fnfgnfgnfgn
+Infos   : SubWindow : Modify for Label : Amoxicillin has been destroyed from memory
+Traces  : SubWindow : Modify Items by Label has been created
+Traces  : SubWindow : Modify for Ref : 3 has been created
+Infos   : SubWindow : Modify Items by Ref has been destroyed from memory
+Errors  : label ='3' doesn't exist
+Infos   : SubWindow : Modify for Ref : 3 has been destroyed from memory
+Traces  : Main Application Destroyed
+Infos   : MainFrame : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : C:\Users\Sphiyo\Desktop\MedEase\databases\DemoData.db has been destroyed from memory
+Infos   : MainMenu : has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+

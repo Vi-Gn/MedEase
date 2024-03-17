@@ -18,6 +18,8 @@ limitations under the License.
 from tkinter.ttk import Frame as TFrame
 from tkinter.ttk import Notebook as TNotebook
 
+from CLog import CLog
+
 
 
 class FrameTab(TFrame):
@@ -34,6 +36,9 @@ class FrameTab(TFrame):
     self.openPaths: list[str] = []
     
   
+  def __del__(self):
+    CLog.Info(f"FrameTab : has been destroyed from memory")
+        
   
   def __Grid(self, colIndex: int):
     self.grid(row=0, column=colIndex, sticky="nsew", padx=5, pady=5)

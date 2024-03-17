@@ -9,6 +9,7 @@ from typing import Self
 
 
 class CustomLog:
+    FileLog = None
     _instance = None
     def __new__(cls, *args, **vargs) -> Self:
         if cls._instance == None:
@@ -20,18 +21,20 @@ class CustomLog:
         return CustomLog._instance
     
     def __init__(self):
+        
         self.__timeNow = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         self.__name = os.path.abspath('logs\\' + 'log_' + self.__timeNow + '.txt')
         self.fLog = open(file = self.__name, mode = 'w', newline='\n')
         self.Info("Logging On")
         self._EraseOldLogFiles(5)
-        
+        CustomLog.FileLog = self.fLog
     
     def __del__(self):
-        print('Clog Del')
+        CLog.Info('Log Class Begin Destruction')
+        self.Info('Logging Off')
+        CLog.Info('Log Class End Destruction')
         print('\n\n\n')
         self.fLog.write('\n\n\n')
-        self.Info('Logging Off')
         self.fLog.close()
 
     def _EraseOldLogFiles(self, logsCountToKeep: int):

@@ -19,8 +19,8 @@ limitations under the License.
 
 from Application import *
 # from Application import Interactions
-from CLog import *
 
+from CLog import *
 
 
 
@@ -32,7 +32,7 @@ def main():
 
 
   # //todo this should be called after double clicking a db from file table
-  framedTableData = FramedTable(frameTab=Application.Get().frameTabData, tabname='Demo')
+  framedTableData = FramedTable(frameTab=Application.Get().frameTabData, tabname='Demo', FileOrData=False)
   framedTableData.InitTableData(relpath='databases\\DemoData.db')
   app.mainloop()
   
@@ -47,5 +47,3 @@ def main():
 
 if __name__ == '__main__':
   main()
-
-  ef = CLog.fLog

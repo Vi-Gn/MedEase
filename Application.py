@@ -18,6 +18,7 @@ import os
 from tkinter import Tk as TTk, messagebox, ttk
 from typing import Self
 
+from CLog import *
 
 from FrameTab import FrameTab
 from FramedTable import FramedTable
@@ -25,7 +26,6 @@ from MainFrame import MainFrame
 from MainMenu import MainMenu
 from FileManager import TFileManager
 
-from CLog import *
     
 class Application(TTk):
   _instance = None
@@ -51,7 +51,7 @@ class Application(TTk):
     self.mainmenu = MainMenu(self)
     self.mainframe = MainFrame(appRoot=self, labelText='App')
     self.frameTabFile = FrameTab(mainFrame=self.mainframe, colIndex=0, width=250)
-    self.framedTableFile: FramedTable = FramedTable(frameTab=self.frameTabFile, tabname='taby')
+    self.framedTableFile: FramedTable = FramedTable(frameTab=self.frameTabFile, tabname='taby', FileOrData=True)
     self.framedTableFile.InitTableFile(relpath='-1',show='tree headings')
     self.frameTabData = FrameTab(mainFrame=self.mainframe, colIndex=1, width=100)
     self.framedTableData: FramedTable
@@ -63,9 +63,18 @@ class Application(TTk):
     self.bind("<F7>", self.PreviousTheme)
     self.bind("<F8>", self.NextTheme)
     self.protocol("WM_DELETE_WINDOW", self.onClose)
+    self.INTERACTION = Interactions()
 
-  def __del__(self):
-    print('Application Del')
+  def destroy(self):    
+    CLog.Trace('Main Application Destroyed')
+    del self.mainmenu
+    del self.mainframe
+    del self.framedTableData
+    del self.framedTableFile
+    del self.frameTabFile
+    del self.frameTabData
+    super().destroy()
+    
     
   def InitThemes(self):
     self.style.tk.call("source", "Themes\\ForestTheme\\forest-dark.tcl")
@@ -169,6 +178,8 @@ class Application(TTk):
       
     return False
   
+  
+    
   def onClose(self):
     if messagebox.askyesno(title='Quit', message='Are You Sure You Want To Quit !'):
       if self.NeedsSave():
@@ -186,6 +197,8 @@ class Application(TTk):
                 framedTableTemp.SaveFile()
             else:
                 CLog.Info("No pending changes to be saved.")
+            framedTableTemp.destroy()
+            
           self.destroy()
         else:
           self.destroy()
@@ -208,7 +221,7 @@ class Interactions:
           
         
         if not Interactions.CheckIsTabOpen(tabPath=path):
-          framedtableData = FramedTable(frameTab=Application.Get().frameTabData, tabname=itemName.split('.')[0])
+          framedtableData = FramedTable(frameTab=Application.Get().frameTabData, tabname=itemName.split('.')[0], FileOrData=False)
           framedtableData.InitTableData(relpath=path)
         
         # //todo continue
@@ -217,6 +230,7 @@ class Interactions:
   @staticmethod
   def CheckIsTabOpen(tabPath: str) -> bool:
     app = Application.Get()
+    CLog.Trace(f"Tab To Check For Is Open Is : {tabPath}, \n\t\t\t\t From {app.frameTabData.openPaths} Tabs")
     if tabPath in app.frameTabData.openPaths:
       return True
     else:
@@ -231,10 +245,14 @@ class Interactions:
       indexTab = event.widget.index(f"@{event.x},{event.y}")
       
       selected_tab = event.widget.tab(indexTab, 'text')
+      
+      
       framedTableTemp = event.widget.nametowidget(event.widget.tabs()[indexTab]) 
       pathToClose = framedTableTemp.fileManager.GetAbsolutePath()
       Application.Get().frameTabData.openPaths.remove(pathToClose)
       event.widget.forget(f"@{event.x},{event.y}")
+      framedTableTemp.destroy()
+      del framedTableTemp.database
       CLog.Info(f"CloseTab's name : {selected_tab}")
       CLog.Info(f"CloseTab's path : {pathToClose}")
 

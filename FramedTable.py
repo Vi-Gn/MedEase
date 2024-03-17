@@ -27,15 +27,15 @@ from tkinter.ttk import Scrollbar as TScrollbar
 from typing import Literal
 
 
-from CLog import *
 from FileManager import TFileManager
 from SubWindow import SubWindow
 from RDB import *
+from CLog import *
 
 
 class FramedTable(TFrame):
   '''with scroll'''
-  def __init__(self, frameTab, tabname:str = 'Tab', border=1, relief='groove', *args, **vargs) -> None:
+  def __init__(self, frameTab, FileOrData:bool, tabname:str = 'Tab', border=1, relief='groove', *args, **vargs) -> None:
     self.app = frameTab.app
     self.notebook: TNotebook = frameTab.notebook
     
@@ -51,10 +51,16 @@ class FramedTable(TFrame):
     self.frameTab = frameTab
     self.IsActive: bool = True
     self.database: RDB
-  
-  def __del__(self):
-    print('FrameTable Del')
+    self.FileOrData: bool = FileOrData
+   
+  def destroy(self):
+    super().destroy()
     
+    
+  def __del__(self):
+    CLog.Info(f"FramedTable : has been destroyed from memory")
+        
+  
   def onTabChanged(self, e):
     FramedTableDataTemp = e.widget.nametowidget(e.widget.select()) 
     self.app.framedTableData = FramedTableDataTemp
@@ -210,6 +216,7 @@ class FramedTable(TFrame):
       
     self.columns = "#0"
     self.table = TTreeview(master=self, selectmode=selectmode, show=show)
+    self.table.bind("<Delete>", self.RemoveSelectedItems)
     
     
     self.table.heading(column='#0', text=title, anchor="center", command=lambda : self.ToggleSortFile())
@@ -372,22 +379,47 @@ class FramedTable(TFrame):
   
          
   def RemoveSelectedItems(self, *args):
+    if self.FileOrData:
+      CLog.Warn(f"This is an experimental function should not be used in production | File : {__file__}, Function : {self.RemoveSelectedItems.__name__}")
+      confirm = messagebox.askyesno(title='Danger', message='Are You Sure You Want To Delete File?')
+      selectedItems =  self.table.item(self.table.selection())
+      path = selectedItems["values"][0]
+      path = os.path.abspath(path)
+      tabname = os.path.basename(path) 
+      if confirm:
+        if self.app.INTERACTION.CheckIsTabOpen(path):
+          messagebox.showerror(title="Database already opened!", message=f"Please close {tabname}'s tab first!")
+          CLog.Error(f"Database already opened! | Please close {tabname}'s tab first!")          
+          return
+        if path != '':
+          try:
+            os.remove(path)
+          except PermissionError:
+            messagebox.showerror(title="Can't Remove Database", message="Please close it first!")
+            CLog.Error(f"Can't Remove Database | {selectedItems['values'][0]}")
+          else:
+            CLog.Info(f"Database's Remove Success | {selectedItems['values'][0]}")
+          self.ReLoadDirectoryTable()
+        elif path == '':
+          CLog.Warn(f"Can't Remove Main Directory!")
+        return
+      return
     
-      if self.IsActive:
-        selectedItems = self.table.selection()  # Get the IDs of selected items
-        if selectedItems:
-          confirm = messagebox.askyesno(title='Delete Selected Items', message='Are You Sure?')
-          if confirm:
-            for item in selectedItems:
-              id: int = self.table.item(item, "value")[0]  # Get the value of each selected item
-              self.database.removeByRef(id) 
-            self.LoadDataTable()
-      else:
-        CLog.Error('Trying to erase items from unactive tab ')
+    if self.IsActive:
+      selectedItems = self.table.selection()  # Get the IDs of selected items
+      if selectedItems:
+        confirm = messagebox.askyesno(title='Delete Selected Items', message='Are You Sure?')
+        if confirm:
+          for item in selectedItems:
+            id: int = self.table.item(item, "value")[0]  # Get the value of each selected item
+            self.database.removeByRef(id) 
+          self.LoadDataTable()
+    else:
+      CLog.Error('Trying to erase items from unactive tab ')
   
   def CreateNewFile(self):
     # top = tk.Toplevel(self.app)
-    top = SubWindow(master=self.app, title='Create File DataBase')
+    top = SubWindow(master=self.app, title='Create Database Window')
     UpperFrame = TFrame(top)
     UpperFrame.pack(fill='both', expand=1, anchor='center')
     for i in range(3):
@@ -433,10 +465,10 @@ class FramedTable(TFrame):
     
     
     
-    radioRef = ttk.Radiobutton(MiddleFrame, text="ByRef", value="ref", variable=selectedValueRadio, command=lambda : [ LabelText.set('Choose item By Ref') , selectedValueRadio.set("ref") ] )
+    radioRef = ttk.Radiobutton(MiddleFrame, text="ByRef", value="ref", variable=selectedValueRadio, command=lambda : [ LabelText.set('Choose item By Ref') , selectedValueRadio.set("ref"), top.title(f'Modify Items by {selectedValueRadio.get().capitalize()}') ] ) 
     radioRef.grid(row=0, column=1, sticky='nsew', padx=12, pady=5)
     
-    radioLabel = ttk.Radiobutton(MiddleFrame, text="ByLabel", value="label", variable=selectedValueRadio, command=lambda : [ LabelText.set('Choose item By Label') , selectedValueRadio.set("label") ] )
+    radioLabel = ttk.Radiobutton(MiddleFrame, text="ByLabel", value="label", variable=selectedValueRadio, command=lambda : [ LabelText.set('Choose item By Label') , selectedValueRadio.set("label"), top.title(f'Modify Items by {selectedValueRadio.get().capitalize()}') ] ) 
     radioLabel.grid(row=0, column=2, sticky='nsew', padx=12, pady=5)
     
     
@@ -467,27 +499,31 @@ class FramedTable(TFrame):
       
       
   def __OpenModifyMenu(self, value, colName: str, topL: SubWindow): 
+    title = ''
     match (colName):
       case ('ref'):
         if not self.database.existsRef(value):
           CLog.Error(f'Ref : {value} is not available')
           messagebox.showwarning(title="Can't Modify !", message=f"Ref : {value} is not available")
           topL.focus()
+          
           return
-    
+        title = f'Modify for Ref : {value}'
+        
       case ('label'):
-         if not self.database.existsLabel(value):
+        if not self.database.existsLabel(value):
           CLog.Error(f'Label : {value} is not available')
           messagebox.showwarning(title="Can't Modify !", message=f"Label : {value} is not available")
           topL.focus()
           return
+        title = f'Modify for Label : {value}'
       case _:
         raise Exception('__OpenModifyMenu() only supports Ref and Label as colName')
       
     if topL:
       topL.destroy()
       
-    top = SubWindow(self.app, title=f'Modify {colName} by Label', width=540, height=217)
+    top = SubWindow(self.app, title=title, width=540, height=217)
     top.minsize(width=536, height=255)
     UpperFrame = TFrame(top)
     UpperFrame.pack(fill='both', expand=1, anchor='center')
@@ -498,7 +534,7 @@ class FramedTable(TFrame):
     
   #################################################
   
-    selectedValueRadio = tkinter.StringVar()  
+    selectedValueRadio = tkinter.StringVar(self.app)  
     LabelText = tkinter.StringVar() 
     
     MiddleFrame = TFrame(top)
@@ -512,16 +548,16 @@ class FramedTable(TFrame):
     MiddleFrame.grid_columnconfigure(4, weight=1, minsize=10)
     
     
-    radioLabelDesc = ttk.Radiobutton(MiddleFrame, text="ByDescription", value="description", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Description') , selectedValueRadio.set("description") ] )
+    radioLabelDesc = ttk.Radiobutton(MiddleFrame, text="Description", value="description", variable=selectedValueRadio, command=lambda : [ LabelText.set('Enter The New Description') , selectedValueRadio.set("description") ] )
     radioLabelDesc.grid(row=0, column=1, sticky='nsew', padx=2,)
     
-    radioLabelQty = ttk.Radiobutton(MiddleFrame, text="ByQuantity", value="quantity", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Quantity') , selectedValueRadio.set("quantity") ] )
+    radioLabelQty = ttk.Radiobutton(MiddleFrame, text="Quantity", value="quantity", variable=selectedValueRadio, command=lambda : [ LabelText.set('Enter The New Quantity') , selectedValueRadio.set("quantity") ] )
     radioLabelQty.grid(row=0, column=2, sticky='nsew', padx=2,)
     
-    radioLabelPrice = ttk.Radiobutton(MiddleFrame, text="ByPrice", value="price", variable=selectedValueRadio, command=lambda : [ LabelText.set('Search By Price') , selectedValueRadio.set("price") ] )
+    radioLabelPrice = ttk.Radiobutton(MiddleFrame, text="Price", value="price", variable=selectedValueRadio, command=lambda : [ LabelText.set('Enter The New Price') , selectedValueRadio.set("price") ] )
     radioLabelPrice.grid(row=0, column=3, sticky='nsew', padx=2,)
     
-    selectedValueRadio.set("label")
+    selectedValueRadio.set("description")
     
   #################################################
       
@@ -530,25 +566,43 @@ class FramedTable(TFrame):
     lbl1.grid(row=1, column=1, sticky='nsew', padx=5, pady=5)
     Label = ttk.Entry(UpperFrame, width=120)
     Label.grid(row=2, column=1, sticky='nsew', padx=5, ipady=5)
-    Label.bind("<KeyRelease>", lambda e : self.__SearchColumnCommand(content=e.widget.get(), colName=selectedValueRadio.get()))
     
   #################################################
   
-    LabelText.set('Search By Label')
+    LabelText.set('Enter The New Description')
     LowerFrame = TFrame(top)
     LowerFrame.pack(fill='both', expand=1, anchor='center')
     for i in range(4):
       LowerFrame.grid_columnconfigure(i, weight=1, minsize=20)
     for i in range(2):
       LowerFrame.grid_rowconfigure(i, minsize=30)
-    btnSet = ttk.Button(LowerFrame,text='Set', command=lambda: [ self.__SearchColumnCommand(content=Label.get(), colName=selectedValueRadio.get()), top.destroy() ] )
+    btnSet = ttk.Button(LowerFrame,text='Set', command=lambda:  self.__ModifyColAutomaticallyLoadAndDestroy(labelOrRef=value, colName=colName, col=selectedValueRadio.get(), content=Label.get(), topL=top))
     btnSet.grid(row=0, column=1, sticky='nsew', padx=5, pady=5)
     btnCancel = ttk.Button(LowerFrame,text='Cancel', command=lambda: top.destroy())
     btnCancel.grid(row=0, column=2, sticky='nsew', padx=5, pady=5)
     
-    
-    
-    
+  def __ModifyColAutomaticallyLoadAndDestroy(self, labelOrRef, colName, col, content, topL):
+    match (colName):
+      case ('ref'):
+        self.__ModifyColByRefLoadAndDestroy(ref=labelOrRef, col=col, content=content, topL=topL)
+        
+      case ('label'):
+        self.__ModifyColByLabelLoadAndDestroy(label=labelOrRef, col=col, content=content, topL=topL)
+        
+      case _:
+        raise Exception('__OpenModifyMenu() only supports Ref and Label as colName')
+      
+      
+      
+  def __ModifyColByLabelLoadAndDestroy(self, label, col, content, topL):
+    if self.database.modifyColByLabel(label=label, col=col, content=content) == -1:
+      messagebox.showwarning(title='Label exists already', message='Re-Enter a non indentical label')
+      topL.focus()
+    else:
+      self.LoadDataTable()
+      topL.destroy()
+      
+      
       
   def SearchByLabel(self):
     top = SubWindow(self.app, title='Search Items by Label', width=700, height=255)

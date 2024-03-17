@@ -26,16 +26,15 @@ class RDB():
       self.database = sqlite3.connect(databaseName)
       self.cursor = self.database.cursor()
       self.table = 'stocks'
+      CLog.Info(f"Database : {self.databaseName} has been created")
 
       
     def __del__(self):
-      print('RDB Del')
-      try:
-        CLog.Info(f"{self.databaseName} has been destroyed from memory")
+      self.Destroy()
+      CLog.Info(f"Database : {self.databaseName} has been destroyed from memory")
         
-      except Exception as e:
-        print(e)
-        
+    def Destroy(self):
+      self.database.close()
     
     def createTable(self, table: str = 'stocks') -> None:
       self.table = table

@@ -1,5 +1,0 @@
-Infos   : Logging On
-
-
-
-Infos   : Logging Off

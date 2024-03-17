@@ -18,6 +18,8 @@ limitations under the License.
 
 from tkinter.ttk import LabelFrame as TLabelFrame
 
+from CLog import CLog
+
 class MainFrame(TLabelFrame):
   def __init__(self, appRoot, labelText, border=2, relief: str = 'solid', *args, **vargs) -> None:
     super().__init__(master=appRoot, text=labelText, border=border, relief=relief, *args, **vargs)
@@ -28,3 +30,7 @@ class MainFrame(TLabelFrame):
     self.rowconfigure(1, weight=0)
     self.pack(fill="both", padx=0, pady=0, expand=1)
     
+  
+  def __del__(self):
+    CLog.Info(f"MainFrame : has been destroyed from memory")
+        

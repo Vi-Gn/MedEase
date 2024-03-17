@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 
+from CLog import CLog
 from Enums import EThemeState
 
 
@@ -74,3 +75,6 @@ class MainMenu(TMenu):
     appRoot.CenterWindow()
     ## test ends  ---------------------------------------------------------------------
     
+
+  def __del__(self):
+    CLog.Info(f"MainMenu : has been destroyed from memory")

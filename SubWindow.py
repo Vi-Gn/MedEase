@@ -19,6 +19,8 @@ limitations under the License.
 
 from tkinter import Toplevel as TTopLevel
 
+from CLog import CLog
+
 
 
 
@@ -30,6 +32,16 @@ class SubWindow(TTopLevel):
     self.iconbitmap(icon)
     self.state(state)
     self.CenterWindow()
+    self.Title = title
+    CLog.Trace(f"SubWindow : {self.wm_title()} has been created")
+    
+  def __del__(self):
+    CLog.Info(f"SubWindow : {self.Title} has been destroyed from memory")
+        
+  def destroy(self):
+    self.Title = self.wm_title()
+    super().destroy()
+        
     
   def CenterWindow(self):
     self.update_idletasks()
