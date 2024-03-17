@@ -1,0 +1,19 @@
+Infos   : Logging On
+Infos   : Directory opened : C:\Users\Sphiyo\Desktop\MedEase\databases | Automatically | Didn't choose a valid directory
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\MedEase\databases
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\MedEase\databases
+Infos   : Database : C:\Users\Sphiyo\Desktop\MedEase\databases\DemoData.db has been created
+Traces  : Main Application Destroyed
+Infos   : MainFrame : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : C:\Users\Sphiyo\Desktop\MedEase\databases\DemoData.db has been destroyed from memory
+Infos   : MainMenu : has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+

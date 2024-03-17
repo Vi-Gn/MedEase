@@ -26,7 +26,7 @@ class RDB():
       self.database = sqlite3.connect(databaseName)
       self.cursor = self.database.cursor()
       self.table = 'stocks'
-      CLog.Info(f"Database : {self.databaseName} has been created")
+      CLog.Info(f"Database : {self.databaseName} has Opened")
 
       
     def __del__(self):
@@ -180,8 +180,12 @@ class RDB():
     def modifyColByLabel(self, label: str, col, content):
         if not(self.existsLabel(label)):
             CLog.Error(f"{label =} doesn't exist")
-            return
+            return 
         CLog.Trace(f"{col} of row with {label =} is being modified successfully with : {content}")
+        if col.lower() == "label":
+          if self.existsLabel(content):
+            CLog.Error(f"Label = {content} already exists")
+            return -1
         update = f''' UPDATE {self.table}
                    SET {col} = "{content}" 
                    WHERE label = "{label}";

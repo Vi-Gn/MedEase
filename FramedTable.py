@@ -208,11 +208,14 @@ class FramedTable(TFrame):
         '''
     self.FileSortOrder: bool = True
     if relpath == '-1':
-      self.fileManager = TFileManager('..\\databases')
+      self.fileManager = TFileManager('databases')
       relpath = filedialog.askdirectory(initialdir=self.fileManager.GetAbsolutePath())
+      if relpath == '':
+        CLog.Info(f"Directory opened : {self.fileManager.GetAbsolutePath()} | Automatically | Didn't choose a valid directory")
+        relpath = self.fileManager.GetFileName()
       
       
-    self.fileManager = TFileManager(relpath)
+    self.fileManager.SetPathWorkdir(relpath)
       
     self.columns = "#0"
     self.table = TTreeview(master=self, selectmode=selectmode, show=show)
@@ -862,13 +865,16 @@ class FramedTable(TFrame):
     btnCancel.grid(row=0, column=2, sticky='nsew', padx=5, pady=5)
     
   def OpenDirectoryFileTable(self, relpath: str = '-1'):
-   
     if relpath == '-1':
-      self.fileManager = TFileManager('..\\databases')
-      relpath = filedialog.askdirectory(initialdir=self.fileManager.GetAbsolutePath())
+      self.fileManager.SetPathWorkdir('databases')
+      relpath = filedialog.askdirectory(initialdir=self.fileManager.GetAbsolutePath(), mustexist=True)
+      if relpath == "":
+        relpath = self.fileManager.GetFileName()
+        
+
       
       
-    self.fileManager = TFileManager(relpath)
+    self.fileManager.SetPathWorkdir(relpath)
       
     for item in self.table.get_children():
       self.table.delete(item)
