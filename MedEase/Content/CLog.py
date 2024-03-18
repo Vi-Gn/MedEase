@@ -3,7 +3,7 @@ import os.path
 import os
 from typing import Self
 
-
+import shutil as F 
 
 
 
@@ -23,10 +23,16 @@ class CustomLog:
     def __init__(self):
         
         self.__timeNow = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.__name = os.path.abspath('logs\\' + 'log_' + self.__timeNow + '.txt')
+        self.__name = os.path.abspath('logs\\' + 'log_' + self.__timeNow + '.log')
+        
+        #check if logs/recent path exists make it if not exist
+        temppath = os.path.abspath('logs')
+        if not os.path.isdir(temppath):
+            os.mkdir(temppath)
+        
         self.fLog = open(file = self.__name, mode = 'w', newline='\n')
         self.Info("Logging On")
-        # self._EraseOldLogFiles(10)
+        self._MoveOldLogFilesToRecent(3)
         CustomLog.FileLog = self.fLog
     
     def __del__(self):
@@ -37,17 +43,26 @@ class CustomLog:
         self.fLog.write('\n\n\n')
         self.fLog.close()
 
-    def _EraseOldLogFiles(self, logsCountToKeep: int):
+    def _MoveOldLogFilesToRecent(self, logsCountToKeep: int):
         path = os.path.abspath('logs')
-        dirs = os.listdir(path)
+        dirsAll = os.listdir(path)
+        dirs = []
+        for dirAll in dirsAll:
+            if os.path.basename(dirAll).endswith(".log"):
+                dirs.append(dirAll)
         dirs.sort( reverse=False )
         for i in range(len(dirs)):
             dirs[i] = os.path.join(path, dirs[i])
+        
+        #check if logs/recent path exists make it if not exist
+        temppath = os.path.abspath('logs/recent')
+        if not os.path.isdir(temppath):
+            os.mkdir(temppath)
             
         if (len(dirs) > logsCountToKeep):
             countDel = len(dirs) - logsCountToKeep
             for i in range(countDel):
-                os.remove(dirs[i])
+                F.move(dirs[i], temppath)
         
     def Info(self, msg: str = "", end="\n"):
         print("\x1b[36m" +

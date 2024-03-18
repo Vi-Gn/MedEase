@@ -295,13 +295,26 @@ class Interactions:
       
       
       framedTableTemp = event.widget.nametowidget(event.widget.tabs()[indexTab]) 
+
       pathToClose = framedTableTemp.fileManager.GetAbsolutePath()
+
+      if framedTableTemp.IsDirty():
+        answer = messagebox.askyesnocancel(title="Changes not saved!", message="Do you want to save these change ?")
+        if answer == None:
+          return
+        if answer == False:
+            CLog.Warn(f"CloseTab Not Without Saving : {pathToClose}")
+        elif answer == True:
+          framedTableTemp.SaveFile()
+      
       Application.Get().frameTabData.openPaths.remove(pathToClose)
       event.widget.forget(f"@{event.x},{event.y}")
       framedTableTemp.destroy()
       del framedTableTemp.database
       CLog.Info(f"CloseTab's name : {selected_tab}")
       CLog.Info(f"CloseTab's path : {pathToClose}")
+
+        
 
 
 
