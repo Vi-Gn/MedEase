@@ -15,22 +15,27 @@ limitations under the License.
 """
 
 
-
+ 
+ 
 
 from Application import *
-# from Application import Interactions
 
 from CLog import *
 
 
+from ThankApp import *
 
+
+  
+  
+  
 def main():
   Config.LoadConfig()
   
-  thanks = TTk()
+  bigThanks = ThanksApp()
+  bigThanks.Run()
   
-  thanks.mainloop()
-
+  
   # launch the application
   app: Application = Application()
   

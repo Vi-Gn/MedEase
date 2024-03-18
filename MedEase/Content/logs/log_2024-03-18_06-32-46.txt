@@ -1,0 +1,28 @@
+Infos   : Logging On
+Infos   : Window State : NORMAL | Loaded Successfully
+Infos   : Size Loaded : X = 1024, Y = 450 | Loaded Successfully
+Traces  : MainFrame : has been created successfully
+Infos   : Working Directory : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases | Loaded Successfully
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases
+Warning : Can't load folders or files not from database types | Can't load directory = 'C:\\Users\\Sphiyo\\Desktop\\Github\\MedEase\\MedEase\\Content\\databases' , itemName = 'New folder'
+Infos   : Theme : AZURELIGHT | Loaded Successfully
+Infos   : Opened Paths : 
+Infos   :              : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\StockNew.db | Loaded Successfully
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\StockNew.db has Opened
+Traces  : Main Application Destroyed
+Traces  : MainFrame : has been destroyed from memory
+Traces  : Opened Paths | Saved | Success
+Traces  : Opened Paths | Saved | Success
+Traces  : MainMenu : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\StockNew.db has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+

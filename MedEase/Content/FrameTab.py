@@ -24,6 +24,7 @@ from ConfigJSON import Config
 
 
 
+
 class FrameTab(TFrame):
   def __init__(self, mainFrame, width, colIndex: int, border=1, relief: str = 'groove', *args, **vargs) -> None:
     super().__init__(master=mainFrame, border=border, relief=relief, *args, **vargs)
