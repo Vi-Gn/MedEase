@@ -305,8 +305,15 @@ class FramedTable(TFrame):
     
   def SaveFile(self):
     self.database.save()
-
     
+
+  def IsDirty(self) -> bool:
+    dirty = self.database.database.in_transaction
+    if dirty:
+      CLog.Trace(f"There Are Changes Made Without Saving | FramedTable::IsDirty()")
+    else:
+      CLog.Trace(f"There Are No Changes Made Without Saving | FramedTable::IsDirty()")
+    return dirty
     
   def __addItemAction(self, Label, Description, Quantity, Price):
     

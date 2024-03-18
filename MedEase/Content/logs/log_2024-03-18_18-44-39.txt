@@ -1,0 +1,28 @@
+Infos   : Logging On
+Infos   : Window State : NORMAL | Loaded Successfully
+Infos   : Size Loaded : X = 1024, Y = 450 | Loaded Successfully
+Traces  : MainFrame : has been created successfully
+Infos   : Working Directory : C:\Data | Loaded Successfully
+Traces  : Setup new path in a file manager C:\Data
+Traces  : Setup new path in a file manager C:\Data
+Infos   : Theme : FORESTDARK | Loaded Successfully
+Infos   : Opened Paths : 
+Infos   :              : C:\Data\MedEaseStore.db | Loaded Successfully
+Infos   : Database : C:\Data\MedEaseStore.db has Opened
+Traces  : ------------------------------ Check Should Save | Application::NeedsSave() ------------------------------
+Traces  : Main Application Destroyed
+Traces  : MainFrame : has been destroyed from memory
+Traces  : Opened Paths | Saved | Success
+Traces  : Opened Paths | Saved | Success
+Traces  : MainMenu : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : C:\Data\MedEaseStore.db has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+

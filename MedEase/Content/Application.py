@@ -213,11 +213,12 @@ class Application(TTk):
       CLog.Error(f"{e}")
 
   def NeedsSave(self) -> bool:
+    CLog.Trace("-" * 30 + " Check Should Save | Application::NeedsSave() " + "-" * 30)
     tabs = self.frameTabData.notebook.tabs()
     for i in range(len(tabs)):
       framedTableTemp: FramedTable = self.frameTabData.notebook.nametowidget(self.frameTabData.notebook.tabs()[i]) 
       
-      if framedTableTemp.database.database.total_changes > 0:
+      if framedTableTemp.IsDirty():
         return True
       
     return False
@@ -235,8 +236,9 @@ class Application(TTk):
           tabs = self.frameTabData.notebook.tabs()
           for tab in tabs:
             framedTableTemp: FramedTable = self.frameTabData.notebook.nametowidget(tab) 
+            CLog.Warn(f"{framedTableTemp.database.databaseName = }")   
             
-            if framedTableTemp.database.database.total_changes > 0:
+            if framedTableTemp.IsDirty():
                 CLog.Warn("There are pending changes that need to be saved (committed).")
                 framedTableTemp.SaveFile()
             else:

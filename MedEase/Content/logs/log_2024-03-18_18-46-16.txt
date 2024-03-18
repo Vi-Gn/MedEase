@@ -1,0 +1,45 @@
+Infos   : Logging On
+Infos   : Window State : NORMAL | Loaded Successfully
+Infos   : Size Loaded : X = 1024, Y = 450 | Loaded Successfully
+Traces  : MainFrame : has been created successfully
+Infos   : Working Directory : C:\Data | Loaded Successfully
+Traces  : Setup new path in a file manager C:\Data
+Traces  : Setup new path in a file manager C:\Data
+Infos   : Theme : FORESTDARK | Loaded Successfully
+Infos   : Opened Paths : 
+Infos   :              : C:\Data\MedEaseStore.db | Loaded Successfully
+Infos   : Database : C:\Data\MedEaseStore.db has Opened
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases
+Warning : Can't load folders or files not from database types | Can't load directory = 'C:\\Users\\Sphiyo\\Desktop\\Github\\MedEase\\MedEase\\Content\\databases' , itemName = 'New folder'
+Infos   : Database : C:\Data\MedEaseStore.db has been destroyed from memory
+Infos   : CloseTab's name : MedEaseStore.db
+Infos   : CloseTab's path : C:\Data\MedEaseStore.db
+Traces  : Tab To Check For Is Open Is : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\StockNew.db, 
+				 From [] Tabs
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\StockNew.db has Opened
+Traces  : SubWindow : Modify Quantity has been created
+Traces  : Column : Quantity is being modified with ref = '20'
+Traces  : Column : Quantity is modified successfuly with ref = '20'
+Infos   : SubWindow : Modify Quantity has been destroyed from memory
+Traces  : DB : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\StockNew.db has been saved successfully
+Traces  : ------------------------------ Check Should Save | Application::NeedsSave() ------------------------------
+Infos   : Close Event Canceled
+Traces  : ------------------------------ Check Should Save | Application::NeedsSave() ------------------------------
+Traces  : Main Application Destroyed
+Traces  : MainFrame : has been destroyed from memory
+Traces  : Opened Paths | Saved | Success
+Traces  : Opened Paths | Saved | Success
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\StockNew.db has been destroyed from memory
+Traces  : MainMenu : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+
