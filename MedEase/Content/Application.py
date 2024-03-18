@@ -62,7 +62,22 @@ class Application(TTk):
     self.mainframe = MainFrame(appRoot=self, labelText='App')
     self.frameTabFile = FrameTab(mainFrame=self.mainframe, colIndex=0, width=250)
     self.framedTableFile: FramedTable = FramedTable(frameTab=self.frameTabFile, tabname='taby', FileOrData=True)
-    absPath = Config.GetAbsDirectoryConfig()
+    
+    try:
+      absPath: str = Config.GetAbsDirectoryConfig()
+      if type(absPath) != str:
+        raise Exception('absPath is not a string')
+      else:
+        if not os.path.exists(absPath):
+          Config.SetAbsDirectoryConfig('')
+          Config.SaveConfig()
+          raise Exception('absPath is not a valid')
+
+      
+    except Exception as e:
+      CLog.Error(f"{e} | Application::__init__()")
+      absPath = ''
+
     self.framedTableFile.InitTableFile(absPath=absPath, show='tree headings')
     self.frameTabData = FrameTab(mainFrame=self.mainframe, colIndex=1, width=100)
     self.framedTableData: FramedTable
@@ -92,6 +107,8 @@ class Application(TTk):
     del self.frameTabData
     super().destroy()
     
+  def Run(self):
+    self.mainloop()
     
   def InitThemes(self):
     self.style.tk.call("source", "Themes\\ForestTheme\\forest-dark.tcl")
@@ -243,7 +260,6 @@ class Interactions:
       if itemName.endswith('.db'):
         values: list[str] = e.widget.item(item_id, 'values')
         path: str = ' '.join(values)
-        print(f"{path = } {len(values) = }Application::Interaction::OpenFramedTable()")
         path = os.path.abspath(path)
         
         #######################
@@ -251,8 +267,7 @@ class Interactions:
         
         if not Interactions.CheckIsTabOpen(tabPath=path):
           framedtableData = FramedTable(frameTab=Application.Get().frameTabData, tabname=itemName.split('.')[0], FileOrData=False)
-          print(f"{path = }")
-          framedtableData.InitTableData(relpath=path)
+          framedtableData.InitTableData(absPath=path)
         
         # // continue
         #####################

@@ -1,0 +1,7 @@
+Infos   : Logging On
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+

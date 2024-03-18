@@ -38,10 +38,10 @@ class FrameTab(TFrame):
     self.openPaths: list[str] = []
     
   def destroy(self):
-    openRelPaths: list[str] = []
+    openAbsPaths: list[str] = []
     for openPath in self.openPaths:
-      openRelPaths.append(os.path.relpath(openPath))
-    Config.SetOpenedRefPathsConfig(openRelPaths)
+      openAbsPaths.append(os.path.abspath(openPath))
+    Config.SetOpenedAbsPathsConfig(openAbsPaths)
     Config.SaveConfig()
     super().destroy()
 

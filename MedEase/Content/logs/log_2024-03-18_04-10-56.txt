@@ -1,0 +1,27 @@
+Infos   : Logging On
+Errors  : Can't find config file | Will revert back to default
+Infos   : Window State : NONE | Loaded Successfully
+Infos   : Size Loaded : X = -1, Y = -1 | Loaded Successfully
+Traces  : MainFrame : has been created successfully
+Infos   : Working Directory :  | Loaded Successfully
+Errors  : absPath is not a string | Application::__init__()
+Traces  : Directory opened : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases | Automatically | Didn't choose a valid directory
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases
+Warning : Can't load folders or files not from database types | Can't load directory = 'C:\\Users\\Sphiyo\\Desktop\\Github\\MedEase\\MedEase\\Content\\databases' , itemName = 'New folder'
+Infos   : Theme : AZURELIGHT | Loaded Successfully
+Warning : Can't load Recent Opened Paths : not found! | Path to DemoData.db choosed instead
+Traces  : Main Application Destroyed
+Traces  : MainFrame : has been destroyed from memory
+Traces  : Opened Paths | Saved | Success
+Traces  : Opened Paths | Saved | Success
+Traces  : MainMenu : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+

@@ -71,16 +71,16 @@ class FramedTable(TFrame):
     self.LoadDataTableSortedBy(nameCol)
     
   
-  def InitTableData(self, relpath: str = '', show = 'headings', selectmode = "extended"):
+  def InitTableData(self, absPath: str = '', show = 'headings', selectmode = "extended"):
     self.DataSortOrder: list[str | bool] = ['ref', True]
-    self.fileManager = TFileManager(relpath)
+    self.fileManager = TFileManager(absPath)
     path = self.fileManager.GetAbsolutePath()
     
     self.frameTab.openPaths.append(path)
     self.database = RDB(path)
     self.database.createTable()
     
-    if relpath == '':
+    if absPath == '':
       raise Exception("this is not a valid database")
     
     self.columns = self.database.getColumnNames()
@@ -211,15 +211,10 @@ class FramedTable(TFrame):
         show: ["tree", "headings", "tree headings", ""]
         '''
     self.FileSortOrder: bool = True
-    
-    if absPath == '-1':
-      self.fileManager = TFileManager('databases')
+    self.fileManager = TFileManager('databases')
+    while absPath == '':
       absPath = filedialog.askdirectory(initialdir=self.fileManager.GetAbsolutePath())
-      if absPath == '':
-        CLog.Trace(f"Directory opened : {self.fileManager.GetAbsolutePath()} | Automatically | Didn't choose a valid directory")
-        absPath = self.fileManager.GetFileName()
-    else:
-      self.fileManager = TFileManager(absPath)
+      
     
     self.fileManager.SetPathWorkdir(absPath)
       
@@ -255,11 +250,11 @@ class FramedTable(TFrame):
     
     
     ############################################################################### todo remove this is for test to see what is the values of dbs from treeview
-    for item in self.table.winfo_children():
-      values = self.table.item(item, "values")
-      print(f"{values = }  FramedTable::LoadDirectoryTable()")
+    # for item in self.table.winfo_children():
+    #   values = self.table.item(item, "values")
+    #   print(f"{values = }  FramedTable::LoadDirectoryTable()")
     
-    ##############################################################################################################################################################
+    #########################################################################################################################################################
     
     self.insertFiles(absoluteDirectory, baseName, sortMode)
     
@@ -278,10 +273,10 @@ class FramedTable(TFrame):
   def insertFiles(self, directory, baseName, sortMode:bool):
     '''sortMode: [True -> Sort ascending, False -> descending order]'''
     absPath = os.path.abspath(directory)
-    rootNode = self.table.insert("", "end", text=baseName, open=True)
+    rootNode = self.table.insert("", "end", text=baseName,  open=True)
     Config.SetAbsDirectoryConfig(absPath)
     Config.SaveConfig()
-    self.insertTree(rootNode, directory, sortMode)
+    self.insertTree(rootNode, absPath, sortMode)
 
   def insertTree(self, parent_node, directory, sortMode:bool):
     '''sortMode: [True -> Sort ascending, False -> descending order]'''
@@ -289,12 +284,19 @@ class FramedTable(TFrame):
       for item in sorted(os.listdir(directory), reverse=sortMode):
         itemPath = os.path.join(directory, item)
         itemName = os.path.basename(itemPath)
-        if os.path.isdir(itemPath):
-          node = self.table.insert(parent_node, "end", text=itemName, open=True)
-          self.insertTree(node, itemPath, sortMode)  # Recursively insert subdirectories
+        if itemName.endswith('.db'):
+          if os.path.isdir(itemPath):
+            CLog.Warn(f"Can't load folders Only loads files {directory = } , {itemName = }")
+            # // this shall be prevented cuz we only want databases to be shown 
+            # node = self.table.insert(parent_node, "end", text=itemName, open=True)
+            # self.insertTree(node, itemPath, sortMode)  # Recursively insert subdirectories
+          else:
+            temp = itemPath.replace('\\', '/')
+            self.table.insert(parent_node, "end", text=itemName, values=temp)
         else:
-          temp = itemPath.replace('\\', '/')
-          self.table.insert(parent_node, "end", text=itemName, values=temp)
+          CLog.Warn(f"Can't load folders or files not from database types | Can't load {directory = } , {itemName = }")
+    else:
+      raise Exception("Unhandled Situation?!")
 
 
 
@@ -419,7 +421,11 @@ class FramedTable(TFrame):
             os.remove(path)
           except PermissionError:
             messagebox.showerror(title="Can't Remove Database", message="Please close it first!")
-            CLog.Error(f"Can't Remove Database | {selectedItems['values'][0]}")
+            if selectedItems['values']:
+              CLog.Error(f"Can't Remove Database | {selectedItems['values'][0]}")
+            else:
+              CLog.Error(f"Can't Remove File | No Path | {path}")
+              
           else:
             CLog.Info(f"Database's Remove Success | {selectedItems['values'][0]}")
           self.ReLoadDirectoryTable()

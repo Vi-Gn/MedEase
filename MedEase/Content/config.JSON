@@ -1,11 +1,11 @@
 {
-    "themeName": "VISTA",
+    "themeName": "AZURELIGHT",
     "winSizeX": 1024,
     "winSizeY": 450,
     "winState": "NORMAL",
-    "openedRelPaths": [
-        "databases\\StockNew.db",
-        "databases\\DemoData.db"
+    "openedAbsPaths": [
+        "C:\\Users\\Sphiyo\\Desktop\\Github\\MedEase\\MedEase\\Content\\databases\\StockNew.db",
+        "C:\\Users\\Sphiyo\\Desktop\\Github\\MedEase\\MedEase\\Content\\databases\\DemoData.db"
     ],
     "absDirectory": "C:\\Users\\Sphiyo\\Desktop\\Github\\MedEase\\MedEase\\Content\\databases"
 }

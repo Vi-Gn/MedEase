@@ -460,7 +460,7 @@ class DataAdder:
   @staticmethod
   def addMenuUI(ldata = None, label: str = '', description: str = '', quantity: int = 0, price: float = 0.0, action = ''):
     """ @function shall return => p = add price; q = modify price; qp = both """
-    print('''add''')
+    # print('''add''')
     if ldata == None:
       raise Exception('data invalid')
     data = ldata

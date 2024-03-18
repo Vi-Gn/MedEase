@@ -26,19 +26,31 @@ from CLog import *
 
 def main():
   Config.LoadConfig()
-  app: Application = Application()
-  app.framedTableFile.table.bind('<Double-1>', Interactions.OpenFramedTable)
   
+  thanks = TTk()
+  
+  thanks.mainloop()
+
+  # launch the application
+  app: Application = Application()
+  
+  # // this will open the double clicked database from file structure table
+  app.framedTableFile.table.bind('<Double-1>', Interactions.OpenFramedTable)
+    
+  # // todo needs to close only after being saved means not dirty
+  # // this will close the tab, clicked with middle mouse  
   app.frameTabData.notebook.bind("<Button-2>", Interactions.close_tab)
 
 
-  # //todo this should be called after double clicking a db from file table
-  for path in Config.GetOpenedRelPathsConfig():
-    relPath = os.path.relpath(path)
+  # // Loads Databases from config that has been recently opened
+  for path in Config.GetOpenedAbsPathsConfig():
+    absPath = os.path.abspath(path)
     fileName = os.path.basename(path)
     framedTableData = FramedTable(frameTab=Application.Get().frameTabData, tabname=fileName, FileOrData=False)
-    framedTableData.InitTableData(relpath=relPath)
-  app.mainloop()
+    framedTableData.InitTableData(absPath=absPath)
+    
+    
+  app.Run()
   
 
 

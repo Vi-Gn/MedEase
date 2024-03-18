@@ -21,8 +21,10 @@ class Config:
               'winSizeX': -1,
               'winSizeY': -1,
               'winState': EWINSTATE.NONE.name,
-              'openedRelPaths' : ['databases\\DemoData.db'],
-              'absDirectory' : 'C:\\Users\\Sphiyo\\Desktop\\Github\\MedEase\\MedEase\\Content\\databases'
+              'openedAbsPaths' :  [
+                    
+              ],
+              'absDirectory' : ""
   }
 
   
@@ -30,9 +32,9 @@ class Config:
   def GetAbsDirectoryConfig():
     
     absDirectory = Config.configDict['absDirectory']      
-    CLog.Info(f"Relative Directory : {absDirectory} | Loaded Successfully")
+    CLog.Info(f"Working Directory : {absDirectory} | Loaded Successfully")
     
-    return absDirectory
+    return str(absDirectory)
     
     
   @staticmethod
@@ -41,20 +43,21 @@ class Config:
     
   
   @staticmethod
-  def GetOpenedRelPathsConfig():
-    openedRelPaths: list[str] = Config.configDict['openedRelPaths']
-    if len(openedRelPaths):
+  def GetOpenedAbsPathsConfig():
+    openedAbsPaths: list[str] = Config.configDict['openedAbsPaths']
+    if len(openedAbsPaths):
       CLog.Info(f"Opened Paths : ")
-      for penedRelPath in openedRelPaths:
-        CLog.Info(f"             : {penedRelPath} | Loaded Successfully")
+      for openedAbsPath in openedAbsPaths:
+        CLog.Info(f"             : {openedAbsPath} | Loaded Successfully")
     else:
       CLog.Warn(f"Can't load Recent Opened Paths : not found! | Path to DemoData.db choosed instead")
-    return openedRelPaths
+    return openedAbsPaths
     
     
   @staticmethod
-  def SetOpenedRefPathsConfig(openedRelPaths: list[str]):
-    Config.configDict['openedRelPaths'] = openedRelPaths
+  def SetOpenedAbsPathsConfig(openedAbsPaths: list[str]):
+    Config.configDict['openedAbsPaths'] = openedAbsPaths
+    CLog.Trace(f"Opened Paths | Saved | Success")
     
   
   @staticmethod

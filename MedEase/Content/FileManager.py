@@ -32,8 +32,8 @@ from tkinter import ttk
         
 
 class TFileManager:
-  def __init__(self, relPathWorkdir) -> None:
-    self.__workdirAbs = os.path.abspath(relPathWorkdir)
+  def __init__(self, absPathWorkdir) -> None:
+    self.__workdirAbs = os.path.abspath(absPathWorkdir)
 
 
   def SetPathWorkdir(self, absPathWorkdir):
