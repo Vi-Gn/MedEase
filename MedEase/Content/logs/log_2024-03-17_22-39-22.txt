@@ -1,0 +1,31 @@
+Infos   : Logging On
+Infos   : Window State : NORMAL | Loaded Successfully
+Infos   : Size Loaded : X = 1024, Y = 450 | Loaded Successfully
+Infos   : Relative Directory : databases | Loaded Successfully
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\databases
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\databases
+Infos   : Theme : FORESTLIGHT | Loaded Successfully
+Infos   : Opened Paths : 
+Infos   :              : databases\DemoData.db | Loaded Successfully
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\databases\DemoData.db has Opened
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\databases\DemoData.db has been destroyed from memory
+Infos   : CloseTab's name : DemoData.db
+Infos   : CloseTab's path : C:\Users\Sphiyo\Desktop\Github\MedEase\databases\DemoData.db
+Traces  : Tab To Check For Is Open Is : C:\Users\Sphiyo\Desktop\Github\MedEase\databases\StockNew.db, 
+				 From [] Tabs
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\databases\StockNew.db has Opened
+Traces  : Main Application Destroyed
+Infos   : MainFrame : has been destroyed from memory
+Infos   : MainMenu : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\databases\StockNew.db has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+

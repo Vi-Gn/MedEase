@@ -1,0 +1,107 @@
+* {
+  font-family: Lemon, Verdana, Pacifico;
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+/* body{
+}
+header > *,
+aside > *,
+body > *,
+footer > *,
+main > *,
+header,
+aside,
+body,
+footer,
+section{
+  min-width: 500px !important;
+} */
+
+/* header {
+  position: fixed;
+  top: 0;
+  left:0;
+  width: 100vw;
+  color: black;
+  z-index: 9999;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.139);
+  background-color: rgb(57, 56, 56);
+  padding-left: 0px;
+} */
+ 
+/* header + * {
+ margin-top: calc(90px + ( 20px * 2 ));  /* ( header height in master.css ) + ( header->top:20px * 2 ) *-/
+} */
+
+/* aside {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  z-index: 9999;
+  height: 50px;
+  width: 100%;
+  background-color: rgb(123, 55, 55);
+} */
+
+/* section{ 
+  overflow: hidden;
+} */
+
+/* main {
+  position: relative;
+  font-size: 2rem;
+  margin-top: calc(80px + 50px);
+  margin-left: 220px;
+  margin-inline: 0px !important;
+  padding: 0px !important;
+  width: 100vw;
+  min-height: calc(100vh - 100px - 300px);
+
+} */
+
+/* footer {
+  margin: 0;
+  padding: 35px;
+  margin-left: 220px;
+  min-height: 300px;
+} */
+/* 
+a {
+  color: white;
+  text-decoration: none;
+}
+a:hover {
+  color: black;
+} */
+
+/* header span,
+a {
+  font-family: Lemon, Verdana, Pacifico;
+  font-size: medium;
+  font-weight: 100;
+} */
+
+
+
+
+
+
+/* li {
+  display: inline-block;
+  padding: 0px;
+  text-align: center;
+}
+
+li:hover {
+  border-color: black;
+  cursor: pointer;
+} */
+/* 
+p{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: large;
+  // word-break: break-all; 
+} */

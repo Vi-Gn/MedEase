@@ -1,0 +1,39 @@
+Infos   : Logging On
+Infos   : Window State : NORMAL | Loaded Successfully
+Infos   : Size Loaded : X = 1024, Y = 450 | Loaded Successfully
+Infos   : Relative Directory : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\New folder | Loaded Successfully
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\New folder
+Traces  : Setup new path in a file manager C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\New folder
+Infos   : Theme : VISTA | Loaded Successfully
+Infos   : Opened Paths : 
+Infos   :              : databases\StockNew.db | Loaded Successfully
+Infos   :              : databases\DemoData.db | Loaded Successfully
+Infos   :              : databases\New folder\Niko.db | Loaded Successfully
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\StockNew.db has Opened
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\DemoData.db has Opened
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\New folder\Niko.db has Opened
+Traces  : SubWindow : Add Item has been created
+Traces  : labelNoFound = True
+Infos   : SubWindow : Add Item has been destroyed from memory
+Infos   : No pending changes to be saved.
+Infos   : No pending changes to be saved.
+Warning : There are pending changes that need to be saved (committed).
+Traces  : DB : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\New folder\Niko.db has been saved successfully
+Traces  : Main Application Destroyed
+Infos   : MainFrame : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\New folder\Niko.db has been destroyed from memory
+Infos   : MainMenu : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : FrameTab : has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\DemoData.db has been destroyed from memory
+Infos   : FramedTable : has been destroyed from memory
+Infos   : Database : C:\Users\Sphiyo\Desktop\Github\MedEase\MedEase\Content\databases\StockNew.db has been destroyed from memory
+Infos   : Log Class Begin Destruction
+Infos   : Logging Off
+Infos   : Log Class End Destruction
+
+
+
