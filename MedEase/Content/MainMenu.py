@@ -83,4 +83,4 @@ class MainMenu(TMenu):
     
 
   def __del__(self):
-    CLog.Info(f"MainMenu : has been destroyed from memory")
+    CLog.Trace(f"MainMenu : has been destroyed from memory")
