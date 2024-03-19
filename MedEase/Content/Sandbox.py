@@ -54,8 +54,13 @@ def main():
     framedTableData = FramedTable(frameTab=Application.Get().frameTabData, tabname=fileName, FileOrData=False)
     framedTableData.InitTableData(absPath=absPath)
     
-    
-  app.Run()
+  while True:
+    if app.winfo_exists():
+      app.update()
+    else:
+      del app
+      break
+  # app.Run()
   
 
 
