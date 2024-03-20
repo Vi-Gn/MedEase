@@ -32,11 +32,13 @@ class MainMenu(TMenu):
     self.FramedTableFile = None
     ## test start --------------------------------------------------------------------- 
     self.file_menu = TMenu(self, tearoff=0)
-    self.file_menu.add_command(label="Open Directory", command= lambda : self.app.framedTableFile.OpenDirectoryFileTable())
-    self.file_menu.add_command(label="New Database", command= lambda : self.app.framedTableFile.CreateNewFile(), accelerator="Ctrl+N"
-                               # Ctrl + N
-                               )
-    self.file_menu.add_command(label="Save Database", command= lambda : self.app.framedTableData.SaveFile())
+    self.file_menu.add_command(label="Open Directory (CTRL+O)", command= lambda : self.app.framedTableFile.OpenDirectoryFileTable())
+    self.file_menu.add_separator()
+    self.file_menu.add_command(label="New Database (CTRL+N)", command= lambda : self.app.framedTableFile.CreateNewFile())
+    self.file_menu.add_separator()
+    self.file_menu.add_command(label="Save Database (CTRL+S)", command= lambda : self.app.framedTableData.SaveFile())
+    self.file_menu.add_command(label="Save All (CTRL+SHIFT+S)", command= lambda : self.app.SaveAll())
+    self.file_menu.add_separator()
     self.file_menu.add_command(label="Reload Database", command= lambda : self.app.framedTableData.LoadDataTable())
     self.file_menu.add_command(label="Reload Directory", command= lambda : self.app.framedTableFile.ReLoadDirectoryTable())
     self.file_menu.add_separator()

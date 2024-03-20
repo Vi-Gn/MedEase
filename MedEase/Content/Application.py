@@ -27,7 +27,8 @@ from MainMenu import MainMenu
 
 from ConfigJSON import Config, EWINSTATE
 
-    
+import gc
+
 class Application(TTk):
   _instance = None
   def __new__(cls, *args, **vargs) -> Self:
@@ -40,7 +41,8 @@ class Application(TTk):
       return Application._instance
 
   def __init__(self, title: str = 'MedEase', iconRelPath: str = 'Icon/meds.ico', width: int = 1024, height: int = 450, state: str ='normal') -> None:
-    '''state: [normal, icon, iconic (see wm_iconwindow), withdrawn, or zoomed (Windows only)]'''
+    ''' state: [normal, icon, iconic (see wm_iconwindow), withdrawn, or zoomed (Windows only)]
+        // todo Needs Fix state, width, and height if found from file doesn't get read'''
     super().__init__()
     
     self.Title: str = title
@@ -56,7 +58,7 @@ class Application(TTk):
       self.geometry(f"{size[0]}x{size[1]}")
     else:
       self.geometry(f"{width}x{height}")
-    self.minsize(width=width, height=height)
+    self.minsize(width=1024, height=450)
     self.CenterWindow()
     self.mainmenu = MainMenu(self)
     self.mainframe = MainFrame(appRoot=self, labelText='App')
@@ -68,12 +70,14 @@ class Application(TTk):
       if type(absPath) != str:
         raise Exception('absPath is not a string')
       else:
-        if not os.path.exists(absPath):
+        if not os.path.isdir(absPath):
           Config.SetAbsDirectoryConfig('')
           Config.SaveConfig()
-          raise Exception('absPath is not a valid')
+          Config.LoadConfig()
+          absPath: str = Config.GetAbsDirectoryConfig()
+          CLog.Error("Can't Insert folder into file table | Not a Directory")
+          
 
-      
     except Exception as e:
       CLog.Error(f"{e} | Application::__init__()")
       absPath = ''
@@ -105,6 +109,7 @@ class Application(TTk):
     del self.framedTableFile
     del self.frameTabFile
     del self.frameTabData
+    gc.collect()
     super().destroy()
     
   def Run(self):
@@ -115,7 +120,16 @@ class Application(TTk):
     self.style.tk.call("source", "Themes\\ForestTheme\\forest-light.tcl")
     self.style.tk.call("source", "Themes/AzureTheme/azure.tcl")
     self.style.tk.call("source", "Themes/SunValley/sv_ttk/sv.tcl")
-    
+      
+  def SetFunctionTimer(self, ms, function, *args) -> str:
+    '''returns {Id} as (str)'''
+    iid = self.after(ms, function, *args)
+    self.after(ms, self.SetFunctionTimer, ms, function, *args)
+    return iid
+  
+  def ClearFunctionTimer(self, iid: str):
+    self.after_cancel(iid)  
+  
   def SetTheme(self, eThemeState: ETHEMESTATE):
     """ themeName: [EThemeState.DEFAULT,  EThemeState.LIGHT,  EThemeState.DARK] """
     self.Theme = eThemeState
@@ -169,21 +183,15 @@ class Application(TTk):
         
       case _:
         raise Exception(f"There is no theme called {eThemeState}")
-      
-    
-    
-
+         
   def NextTheme(self, *args):    
     self.Theme = ETHEMESTATE.next(self.Theme)
     self.SetTheme(self.Theme)
       
-
   def PreviousTheme(self, *args):    
     self.Theme = ETHEMESTATE.prev(self.Theme)
     self.SetTheme(self.Theme)
-      
-      
-    
+          
   def CenterWindow(self):
     self.update_idletasks()
     width = self.winfo_width()
@@ -213,7 +221,6 @@ class Application(TTk):
       CLog.Error(f"{e}")
 
   def NeedsSave(self) -> bool:
-    CLog.Trace("-" * 30 + " Check Should Save | Application::NeedsSave() " + "-" * 30)
     tabs = self.frameTabData.notebook.tabs()
     for i in range(len(tabs)):
       framedTableTemp: FramedTable = self.frameTabData.notebook.nametowidget(self.frameTabData.notebook.tabs()[i]) 
@@ -224,6 +231,57 @@ class Application(TTk):
     return False
   
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  def CheckSave(self):
+    for tab in self.frameTabData.notebook.tabs():
+      framedTableTemp: FramedTable = self.frameTabData.notebook.nametowidget(tab)      
+      if not framedTableTemp.inSearch: 
+        if framedTableTemp.IsDirty(log=False):
+          framedTableTemp.notebook.tab(framedTableTemp, text= (framedTableTemp.fileManager.GetFileName() + ' *'))
+        else:
+          framedTableTemp.notebook.tab(framedTableTemp, text= (framedTableTemp.fileManager.GetFileName()))
+        
+    # tempData = self.database.getColContain(content=content, colName=colName)
+    # if tempData:
+    #   for row in tempData:
+    #     self.Insert(values=row)
+    # if content != '':
+    #   self.notebook.tab(self, text= f"{self.fileManager.GetFileName()} (Search By {colName} : {content})")
+    # else:
+    #   self.notebook.tab(self, text= (self.fileManager.GetFileName()))
+      
+      
+      
+  def SaveAll(self):
+    if self.NeedsSave():
+      answer = messagebox.askyesno(title='Closing App', message='Do you want to save all changes?')
+      if answer:
+        tabs = self.frameTabData.notebook.tabs()
+        for tab in tabs:
+          framedTableTemp: FramedTable = self.frameTabData.notebook.nametowidget(tab)           
+          if framedTableTemp.IsDirty():
+            framedTableTemp.SaveFile()
+          
+        CLog.Info(f"Save All | Success")   
+      else:
+        CLog.Info(f"Save All | Ignored")    
+       
+      
+      
+      
+      
+      
     
   def onClose(self):
     if messagebox.askyesno(title='Quit', message='Are You Sure You Want To Quit !'):

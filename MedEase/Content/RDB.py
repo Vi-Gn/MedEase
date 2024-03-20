@@ -56,12 +56,10 @@ class RDB():
       CLog.Trace(f"DB : {self.databaseName} has been saved successfully")
       self.database.commit()
 
-
     def insert(self, label: str, description: str, quantity: int, price: float):
         self.execLines("INSERT INTO stocks(label, description, quantity, price)",
                               f"VALUES ( '{label}', '{description}', {quantity}, {price})")
         
-
     def execLinesFetched(self, *lines):
         """fetch all from exec without altering current cursor value"""
         cmd = ''

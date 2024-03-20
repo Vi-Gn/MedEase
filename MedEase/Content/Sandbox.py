@@ -32,8 +32,8 @@ from ThankApp import *
 def main():
   Config.LoadConfig()
   
-  bigThanks = ThanksApp()
-  bigThanks.Run()
+  # bigThanks = ThanksApp()
+  # bigThanks.Run()
   
   
   # launch the application
@@ -54,13 +54,15 @@ def main():
     framedTableData = FramedTable(frameTab=Application.Get().frameTabData, tabname=fileName, FileOrData=False)
     framedTableData.InitTableData(absPath=absPath)
     
-  while True:
-    if app.winfo_exists():
-      app.update()
-    else:
-      del app
-      break
-  # app.Run()
+    
+  app.SetFunctionTimer(500, app.CheckSave)
+  # while True:
+  #   if app.winfo_exists():
+  #     app.update()
+  #   else:
+  #     del app
+  #     break
+  app.Run()
   
 
 

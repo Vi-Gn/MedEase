@@ -53,7 +53,11 @@ class FramedTable(TFrame):
     self.IsActive: bool = True
     self.database: RDB
     self.FileOrData: bool = FileOrData
-   
+    self.app.bind("<Control-n>", lambda e : self.CreateNewFile())
+    self.app.bind("<Control-o>", lambda e : self.OpenDirectoryFileTable())
+    self.app.bind("<Control-s>", self.SaveFile)
+    self.app.bind("<Control-S>", self.SaveFile)
+    self.inSearch = False
   def destroy(self):
     super().destroy()
     
@@ -198,11 +202,15 @@ class FramedTable(TFrame):
   ########################################################################################
   
   def LoadDataTable(self):
+    self.inSearch = False
     for item in self.table.get_children():
       self.table.delete(item)
     for row in self.database.getData():
       self.Insert(values=row)
-    self.notebook.tab(self, text=(self.fileManager.GetFileName()))
+    if self.IsDirty():
+      self.notebook.tab(self, text=(self.fileManager.GetFileName() + " *"))
+    else:
+      self.notebook.tab(self, text=(self.fileManager.GetFileName()))
       
       
 
@@ -238,29 +246,18 @@ class FramedTable(TFrame):
     return self.table
   
     
+  def ToggleSortFile(self):
+    self.FileSortOrder = not self.FileSortOrder
+    self.ReLoadDirectoryTable(sortMode=self.FileSortOrder)
+    
 
   def LoadDirectoryTable(self, absDirectory, sortMode:bool = True):
     self.fileManager.SetPathWorkdir(absDirectory)
     tempTitle: str = self.app.Title
-    self.app.title( tempTitle + '          ' +  self.fileManager.GetAbsolutePath())
-    
+    self.app.title( tempTitle + '          ' +  self.fileManager.GetAbsolutePath())    
     absoluteDirectory = self.fileManager.GetAbsolutePath()
-    baseName = self.fileManager.GetFileName()
-    
-    
-    
-    ############################################################################### todo remove this is for test to see what is the values of dbs from treeview
-    # for item in self.table.winfo_children():
-    #   values = self.table.item(item, "values")
-    #   print(f"{values = }  FramedTable::LoadDirectoryTable()")
-    
-    #########################################################################################################################################################
-    
+    baseName = self.fileManager.GetFileName()        
     self.insertFiles(absoluteDirectory, baseName, sortMode)
-    
-  def ToggleSortFile(self):
-    self.FileSortOrder = not self.FileSortOrder
-    self.ReLoadDirectoryTable(sortMode=self.FileSortOrder)
     
   def ReLoadDirectoryTable(self, sortMode:bool = True):
     '''sortMode: [True -> Sort ascending, False -> descending order]'''
@@ -274,9 +271,13 @@ class FramedTable(TFrame):
     '''sortMode: [True -> Sort ascending, False -> descending order]'''
     absPath = os.path.abspath(directory)
     rootNode = self.table.insert("", "end", text=baseName,  open=True)
-    Config.SetAbsDirectoryConfig(absPath)
-    Config.SaveConfig()
-    self.insertTree(rootNode, absPath, sortMode)
+    if os.path.isdir(absPath):
+      Config.SetAbsDirectoryConfig(absPath)
+      Config.SaveConfig()
+      Config.LoadConfig()
+      self.insertTree(rootNode, absPath, sortMode)
+    else:
+      CLog.Error("Can't Insert folder into file table | Not a Directory")
 
   def insertTree(self, parent_node, directory, sortMode:bool):
     '''sortMode: [True -> Sort ascending, False -> descending order]'''
@@ -301,17 +302,25 @@ class FramedTable(TFrame):
 
 
 ########################################################################################
-  
-    
-  def SaveFile(self):
+ 
+      
+  def SaveFile(self, *args):
+    for e in args:
+      if (e.state == 13 or e.state == 15):
+        self.inSearch = False
+        self.LoadDataTable()
+        self.app.SaveAll()
+        return
+    self.inSearch = False
+    self.LoadDataTable()
     self.database.save()
     
 
-  def IsDirty(self) -> bool:
+  def IsDirty(self, log:bool = False) -> bool:
     dirty = self.database.database.in_transaction
-    if dirty:
+    if (dirty == True) and (log == True):
       CLog.Trace(f"There Are Changes Made Without Saving | FramedTable::IsDirty()")
-    else:
+    elif (dirty == False) and (log == True):
       CLog.Trace(f"There Are No Changes Made Without Saving | FramedTable::IsDirty()")
     return dirty
     
@@ -453,24 +462,22 @@ class FramedTable(TFrame):
     else:
       CLog.Error('Trying to erase items from unactive tab ')
   
+  
   def CreateNewFile(self):
-    # top = tk.Toplevel(self.app)
-    top = SubWindow(master=self.app, title='Create Database Window')
+    top = SubWindow(master=self.app, title='Create Database Window', width=300, height=200)
     UpperFrame = TFrame(top)
     UpperFrame.pack(fill='both', expand=1, anchor='center')
     for i in range(3):
       UpperFrame.grid_columnconfigure(i, weight=1, minsize=20)
     for i in range(6):
-      UpperFrame.grid_rowconfigure(i, minsize=20)
+      UpperFrame.grid_rowconfigure(i, minsize=30)
     
     ttk.Label(UpperFrame, text='Enter the file name').grid(row=1, column=1, sticky='nsew', padx=5, pady=5)
-    
     name = ttk.Entry(UpperFrame)
-    name.grid(row=2, column=1, sticky='nsew', padx=5, pady=5)
-    # inp = name.
-    
+    name.grid(row=2, column=1, sticky='nsew', padx=5, pady=5)    
     btn = ttk.Button(UpperFrame,text='reload', command=lambda: [ self.fileManager.CreateFile(name.get()), self.ReLoadDirectoryTable(), top.destroy()], padding=5)
     btn.grid(row=4, column=1, sticky='nsew', padx=5, pady=5)
+    
     
     
   def ModifyChoose(self):
@@ -703,7 +710,7 @@ class FramedTable(TFrame):
       LowerFrame.grid_rowconfigure(i, minsize=30)
     btnSet = ttk.Button(LowerFrame,text='Set', command=lambda: [ self.__SearchColumnCommand(content=Label.get(), colName=selectedValueRadio.get()), top.destroy() ] )
     btnSet.grid(row=0, column=1, sticky='nsew', padx=5, pady=5)
-    btnCancel = ttk.Button(LowerFrame,text='Cancel', command=lambda: top.destroy())
+    btnCancel = ttk.Button(LowerFrame,text='Cancel', command=lambda: [ self.LoadDataTable() , top.destroy()])
     btnCancel.grid(row=0, column=2, sticky='nsew', padx=5, pady=5)
       
       
@@ -715,9 +722,14 @@ class FramedTable(TFrame):
       for row in tempData:
         self.Insert(values=row)
     if content != '':
-      self.notebook.tab(self, text= f"{self.fileManager.GetFileName()} (Search By {colName} : {content})")
+      self.inSearch = True
+      if self.IsDirty():
+        self.notebook.tab(self, text= f"{self.fileManager.GetFileName()} (Search By {colName} : {content}) *")
+      else:
+        self.notebook.tab(self, text= f"{self.fileManager.GetFileName()} (Search By {colName} : {content})")
+        
     else:
-      self.notebook.tab(self, text= (self.fileManager.GetFileName()))
+      self.inSearch = False
     
   def __ModifyRefCommand(self, ref ,label, description, quantity, price):
     self.database.modifyAllByRef( ref=ref ,label=label.get(), description=description.get(), quantity=quantity.get(), price=price.get()) 
