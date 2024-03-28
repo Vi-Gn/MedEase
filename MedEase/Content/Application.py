@@ -63,7 +63,7 @@ class Application(TTk):
     self.mainmenu = MainMenu(self)
     self.mainframe = MainFrame(appRoot=self, labelText='App')
     self.frameTabFile = FrameTab(mainFrame=self.mainframe, colIndex=0, width=250)
-    self.framedTableFile: FramedTable = FramedTable(frameTab=self.frameTabFile, tabname='taby', FileOrData=True)
+    self.framedTableFile: FramedTable = FramedTable(frameTab=self.frameTabFile, tabname='File', FileOrData=True)
     
     try:
       absPath: str = Config.GetAbsDirectoryConfig()
@@ -92,6 +92,11 @@ class Application(TTk):
     self.bind("<F11>", self.ToggleFullScreen)
     self.bind("<F7>", self.PreviousTheme)
     self.bind("<F8>", self.NextTheme)
+
+    self.bind("<F5>", lambda e : [self.framedTableData.LoadDataTable() , self.framedTableFile.ReLoadDirectoryTable()])
+    
+    self.bind("<F1>", lambda e : self.OpenDocumentation())
+    self.bind("<Insert>", lambda e : self.framedTableData.AddItem())
     
     self.bind("<Control-n>", lambda e : self.framedTableFile.CreateNewFile())
     self.bind("<Control-o>", lambda e : self.framedTableFile.OpenDirectoryFileTable())
