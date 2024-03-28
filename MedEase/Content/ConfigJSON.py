@@ -17,7 +17,7 @@ class Config:
   
   configDict = {
   
-              'themeName': ETHEMESTATE.AZURELIGHT.name,
+              'themeName': ETHEMESTATE.VISTA.name,
               'winSizeX': -1,
               'winSizeY': -1,
               'winState': EWINSTATE.NONE.name,
@@ -28,6 +28,35 @@ class Config:
   }
 
   
+  @staticmethod
+  def SaveConfig():
+    CLog.Info("Config | Saved")
+    cfg = open('config.JSON', 'w', newline='\n')
+    JSON.dump(Config.configDict, cfg, indent=4)
+    cfg.close()
+    
+  @staticmethod
+  def LoadConfig():
+    try:
+      cfg = open('config.JSON', 'r')
+    except Exception as e:
+      CLog.Error("Can't find config file | Will revert back to default")
+      Config.SaveConfig()
+    else:  
+      try:
+        Config.configDict = JSON.load(cfg)
+        arrOpenPaths = []
+        for path in Config.GetOpenedAbsPathsConfig():
+          if(os.path.isfile(path)):
+            arrOpenPaths.append(path)
+        Config.configDict['openedAbsPaths'] = arrOpenPaths
+        CLog.Info("Valid opened paths were : arrOpenPaths")
+            
+      except Exception as e:
+        CLog.Error("Can't load config file | Will revert back to default")
+        Config.SaveConfig()
+
+
   @staticmethod
   def GetAbsDirectoryConfig():
     
@@ -111,28 +140,6 @@ class Config:
     Config.configDict['winSizeX'] = sizeXY[0]
     Config.configDict['winSizeY'] = sizeXY[1]
   
-  @staticmethod
-  def SaveConfig():
-    CLog.Info("Config | Saved")
-    cfg = open('config.JSON', 'w', newline='\n')
-    JSON.dump(Config.configDict, cfg, indent=4)
-    cfg.close()
-    
-  @staticmethod
-  def LoadConfig():
-    try:
-      cfg = open('config.JSON', 'r')
-    except Exception as e:
-      CLog.Error("Can't find config file | Will revert back to default")
-      Config.SaveConfig()
-    else:  
-      try:
-        Config.configDict = JSON.load(cfg)
-      except Exception as e:
-        CLog.Error("Can't load config file | Will revert back to default")
-        Config.SaveConfig()
-
-
 
 
 if __name__ == '__main__':

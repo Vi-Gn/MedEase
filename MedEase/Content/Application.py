@@ -76,7 +76,7 @@ class Application(TTk):
           Config.LoadConfig()
           absPath: str = Config.GetAbsDirectoryConfig()
           CLog.Error("Can't Insert folder into file table | Not a Directory")
-          
+
 
     except Exception as e:
       CLog.Error(f"{e} | Application::__init__()")
