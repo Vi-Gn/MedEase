@@ -51,12 +51,8 @@ class FramedTable(TFrame):
     self.columns = ''
     self.frameTab = frameTab
     self.IsActive: bool = True
-    self.database: RDB
+    self.database: RDB = None
     self.FileOrData: bool = FileOrData
-    self.app.bind("<Control-n>", lambda e : self.CreateNewFile())
-    self.app.bind("<Control-o>", lambda e : self.OpenDirectoryFileTable())
-    self.app.bind("<Control-s>", self.SaveFile)
-    self.app.bind("<Control-S>", self.SaveFile)
     self.inSearch = False
   def destroy(self):
     super().destroy()
@@ -914,7 +910,8 @@ class FramedTable(TFrame):
     btnCancel.grid(row=0, column=2, sticky='nsew', padx=5, pady=5)
     
   def OpenDirectoryFileTable(self, absPath: str = '-1'):
-    
+    if self.database != None:
+      return
     # if we didn't provide a path 
     if absPath == '-1':
       # 
@@ -922,7 +919,13 @@ class FramedTable(TFrame):
       if absPath != '':
         self.fileManager.SetPathWorkdir(absPath)
       else:
-        absPath = self.fileManager.GetAbsolutePath()
+        temp = self.fileManager.GetAbsolutePath()
+        if os.path.isdir(temp):
+          absPath = temp
+        else:
+          absPath = os.path.dirname(temp)
+        return
+
         
     # if we already gave a valid path (absolute)
     else:
@@ -930,16 +933,10 @@ class FramedTable(TFrame):
       
     for item in self.table.get_children():
       self.table.delete(item)
-    
-    
-    ################################################
-    # //todo this 
-   
-    self.LoadDirectoryTable(absPath)
-    ################################################
-    
-    
 
+    # self.Table(absPath)
+    self.LoadDirectoryTable(self.fileManager.GetAbsolutePath())
+    ################################################
     
     
     

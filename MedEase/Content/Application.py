@@ -92,6 +92,12 @@ class Application(TTk):
     self.bind("<F11>", self.ToggleFullScreen)
     self.bind("<F7>", self.PreviousTheme)
     self.bind("<F8>", self.NextTheme)
+    
+    self.bind("<Control-n>", lambda e : self.framedTableFile.CreateNewFile())
+    self.bind("<Control-o>", lambda e : self.framedTableFile.OpenDirectoryFileTable())
+    self.bind("<Control-s>", lambda e : self.framedTableData.SaveFile(e))
+    self.bind("<Control-S>", lambda e : self.framedTableData.SaveFile(e))
+
     self.protocol("WM_DELETE_WINDOW", self.onClose)
     self.INTERACTION = Interactions()
 
@@ -234,15 +240,6 @@ class Application(TTk):
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
   def CheckSave(self):
     for tab in self.frameTabData.notebook.tabs():
       framedTableTemp: FramedTable = self.frameTabData.notebook.nametowidget(tab)      
@@ -277,7 +274,9 @@ class Application(TTk):
       else:
         CLog.Info(f"Save All | Ignored")    
        
-      
+    else:
+        CLog.Trace(f"Save All | Ignored") 
+
       
       
       

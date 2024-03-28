@@ -40,6 +40,7 @@ class Config:
   @staticmethod
   def SetAbsDirectoryConfig(absDirectory: str):
     Config.configDict['absDirectory'] = absDirectory
+    CLog.Info(f"Working Directory : {absDirectory} | Saved Successfully")
     
   
   @staticmethod
@@ -112,6 +113,7 @@ class Config:
   
   @staticmethod
   def SaveConfig():
+    CLog.Info("Config | Saved")
     cfg = open('config.JSON', 'w', newline='\n')
     JSON.dump(Config.configDict, cfg, indent=4)
     cfg.close()

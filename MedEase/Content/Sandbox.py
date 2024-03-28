@@ -32,8 +32,8 @@ from ThankApp import *
 def main():
   Config.LoadConfig()
   
-  # bigThanks = ThanksApp()
-  # bigThanks.Run()
+  bigThanks = ThanksApp()
+  bigThanks.Run()
   
   
   # launch the application
@@ -64,6 +64,7 @@ def main():
   #     break
   app.Run()
   
+  Config.SaveConfig()
 
 
 
