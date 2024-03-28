@@ -309,7 +309,12 @@ class FramedTable(TFrame):
         return
     self.inSearch = False
     self.LoadDataTable()
-    self.database.save()
+    if self.IsDirty():
+      self.database.save()
+      CLog.Info("Save | Success")
+    else:
+      CLog.Info("Save | Ignored")
+
     
 
   def IsDirty(self, log:bool = False) -> bool:
