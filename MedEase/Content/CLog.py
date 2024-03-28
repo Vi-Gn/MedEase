@@ -5,8 +5,8 @@ from typing import Self
 
 import shutil as F 
 
-
-
+from colorama import init
+init()
 
 class CustomLog:
     FileLog = None
