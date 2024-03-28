@@ -275,7 +275,7 @@ class Application(TTk):
         CLog.Info(f"Save All | Ignored")    
        
     else:
-        CLog.Trace(f"Save All | Ignored") 
+        CLog.Info("No changes made | Save All Discarded")
 
       
       
