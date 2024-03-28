@@ -12,7 +12,8 @@ class ThanksApp(TTk):
     def __init__(self, *args, **vargs) -> None:
         super().__init__(*args, **vargs)
         self.title('Thank You!')
-        self.bind('<Escape>', lambda e : self.destroy())
+        self.bind('<KeyPress>', lambda e : self.destroy())
+        self.bind("<F7>", self.PreviousTheme)
         self.bind("<F8>", self.NextTheme)
         self.width = 880
         self.height = 725
@@ -124,6 +125,12 @@ EL HARRAK Anouar
 
     def NextTheme(self, *args):    
         self.Theme = ETHEMESTATE.next(self.Theme)
+        self.SetTheme(self.Theme)
+        print(self.Theme)
+    
+
+    def PreviousTheme(self, *args):    
+        self.Theme = ETHEMESTATE.prev(self.Theme)
         self.SetTheme(self.Theme)
         print(self.Theme)
     
